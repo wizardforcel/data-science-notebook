@@ -1,43 +1,43 @@
-# ÕÆÎÕ NumPy ³£ÓÃº¯Êı
+# æŒæ¡ NumPy å¸¸ç”¨å‡½æ•°
 
-## ì³²¨ÄÇÆõÊıµÄµÚ n Ïî
+## æ–æ³¢é‚£å¥‘æ•°çš„ç¬¬ n é¡¹
 
 ```py
-# À´Ô´£ºNumPy Cookbook 2e Ch3.1
+# æ¥æºï¼šNumPy Cookbook 2e Ch3.1
 
 import numpy as np
 
-# ì³²¨ÄÇÆõÊıÁĞµÄÃ¿¸öĞÂÏî¶¼ÓÉÖ®Ç°µÄÁ½ÏîÏà¼Ó¶ø³É
-# ÒÔ 1 ºÍ 2 ¿ªÊ¼£¬Ç° 10 ÏîÎª£º
+# æ–æ³¢é‚£å¥‘æ•°åˆ—çš„æ¯ä¸ªæ–°é¡¹éƒ½ç”±ä¹‹å‰çš„ä¸¤é¡¹ç›¸åŠ è€Œæˆ
+# ä»¥ 1 å’Œ 2 å¼€å§‹ï¼Œå‰ 10 é¡¹ä¸ºï¼š
 # 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...
 
-# ì³²¨ÄÇÆõÊıÁĞµÄÍ¨Ïî¹«Ê½Îª£º
+# æ–æ³¢é‚£å¥‘æ•°åˆ—çš„é€šé¡¹å…¬å¼ä¸ºï¼š
 # fn = (phi ** n - (-phi) ** (-n)) / 5 ** 0.5
-# ÆäÖĞ phi ÊÇ»Æ½ğ±ÈÀı£¬phi = (1 + 5 ** 0.5) / 2
+# å…¶ä¸­ phi æ˜¯é»„é‡‘æ¯”ä¾‹ï¼Œphi = (1 + 5 ** 0.5) / 2
 
-# ¿¼ÂÇÒ»¸öì³²¨ÄÇÆõÊıÁĞ£¬Ã¿Ò»ÏîµÄÖµ²»³¬¹ıËÄ°ÙÍò
-# Çó³öÖµÎªÅ¼ÊıµÄÏîµÄºÍ
+# è€ƒè™‘ä¸€ä¸ªæ–æ³¢é‚£å¥‘æ•°åˆ—ï¼Œæ¯ä¸€é¡¹çš„å€¼ä¸è¶…è¿‡å››ç™¾ä¸‡
+# æ±‚å‡ºå€¼ä¸ºå¶æ•°çš„é¡¹çš„å’Œ
 
-# 1. ¼ÆËã phi
+# 1. è®¡ç®— phi
 phi = (1 + np.sqrt(5))/2 
 print("Phi", phi)
 # Phi 1.61803398875
 
-# 2. Ñ°ÕÒĞ¡ÓÚËÄ°ÙÍòµÄÏîµÄË÷Òı
+# 2. å¯»æ‰¾å°äºå››ç™¾ä¸‡çš„é¡¹çš„ç´¢å¼•
 n = np.log(4 * 10 ** 6 * np.sqrt(5) + 0.5)/np.log(phi) 
 print(n)
 # 33.2629480359
 
-# 3. ´´½¨ 1 ~ n µÄÊı×é
+# 3. åˆ›å»º 1 ~ n çš„æ•°ç»„
 n = np.arange(1, n) 
 print(n)
 
-# 4. ¼ÆËãì³²¨ÄÇÆõÊı
+# 4. è®¡ç®—æ–æ³¢é‚£å¥‘æ•°
 fib = (phi**n - (-1/phi)**n)/np.sqrt(5) 
 print("First 9 Fibonacci Numbers", fib[:9])
 # First 9 Fibonacci Numbers [  1.   1.   2.   3.   5.   8.  13.  21.  34.] 
 
-# 5. ×ª»»ÎªÕûÊı£¨¿ÉÑ¡£©
+# 5. è½¬æ¢ä¸ºæ•´æ•°ï¼ˆå¯é€‰ï¼‰
 fib = fib.astype(int) 
 print("Integers", fib)
 '''
@@ -46,65 +46,67 @@ Integers [      1       1       2       3       5       8      13      21      3
   317811  514229  832040 1346269 2178309 3524578] 
 '''
 
-# 6. Ñ¡ÔñÖµÎªÅ¼ÊıµÄÏî
+# 6. é€‰æ‹©å€¼ä¸ºå¶æ•°çš„é¡¹
 eventerms = fib[fib % 2 == 0] 
 print(eventerms)
 # [      2       8      34     144     610    2584   10946   46368  196418  832040 3524578]
 
-# 7. ÇóºÍ
+# 7. æ±‚å’Œ
 print(eventerms.sum())
 # 4613732
 ```
 
-## Ñ°ÕÒÖÊÒòÊı
+## å¯»æ‰¾è´¨å› æ•°
 
 ```py
-# À´Ô´£ºNumPy Cookbook 2e Ch3.2
+# æ¥æºï¼šNumPy Cookbook 2e Ch3.2
 
 from __future__ import print_function 
 import numpy as np
 
-# 13195 µÄÖÊÒòÊıÊÇ 5, 7, 13 ºÍ 29
-# 600851475143 µÄ×î´óÖÊÒòÊıÊÇ¶àÉÙÄØ£¿
+# 13195 çš„è´¨å› æ•°æ˜¯ 5, 7, 13 å’Œ 29
+# 600851475143 çš„æœ€å¤§è´¨å› æ•°æ˜¯å¤šå°‘å‘¢ï¼Ÿ
 
 N = 600851475143 
 LIM = 10 ** 6
 
 
 def factor(n): 
-    # 1. ´´½¨ËÑË÷·¶Î§µÄÊı×é
-    # a ÊÇ sqrtn ~ sqrtn + lim - 1 µÄÊı×é
-    # ÆäÖĞ sqrtn ÊÇ n Æ½·½¸ùÏòÉÏÈ¡Õû
-    # lim ÊÇ sqrtn ºÍ 10e6 µÄ½ÏĞ¡Öµ
+    # 1. åˆ›å»ºæœç´¢èŒƒå›´çš„æ•°ç»„
+    # a æ˜¯ sqrtn ~ sqrtn + lim - 1 çš„æ•°ç»„
+    # å…¶ä¸­ sqrtn æ˜¯ n å¹³æ–¹æ ¹å‘ä¸Šå–æ•´
+    # lim æ˜¯ sqrtn å’Œ 10e6 çš„è¾ƒå°å€¼
     a = np.ceil(np.sqrt(n))   
     lim = min(n, LIM)   
     a = np.arange(a, a + lim)   
     b2 = a ** 2 - n
     
-    # 2. ¼ì²é b ÊÇ·ñÊÇÆ½·½Êı
-    # modf ÓÃÓÚÈ¡Ğ¡Êı²¿·Ö
+    # 2. æ£€æŸ¥ b æ˜¯å¦æ˜¯å¹³æ–¹æ•°
+    # modf ç”¨äºå–å°æ•°éƒ¨åˆ†
     fractions = np.modf(np.sqrt(b2))[0]
     
-    # 3. Ñ°ÕÒÃ»ÓĞĞ¡Êı²¿·ÖµÄµØ·½
-    # ÕâÀïµÄ b ÎªÆ½·½Êı
+    # 3. å¯»æ‰¾æ²¡æœ‰å°æ•°éƒ¨åˆ†çš„åœ°æ–¹
+    # è¿™é‡Œçš„ b ä¸ºå¹³æ–¹æ•°
+    # where ç”¨äºæŠŠå¸ƒå°”ç´¢å¼•å˜æˆä½ç½®ç´¢å¼•
+    # ä½†æ˜¯æ•ˆæœæ˜¯ä¸€æ ·çš„
     indices = np.where(fractions == 0)
     
-    # 4. Ñ°ÕÒ b ÎªÆ½·½ÊıÊ±£¬a µÄÖµ£¬²¢È¡³öµÚÒ»¸ö
+    # 4. å¯»æ‰¾ b ä¸ºå¹³æ–¹æ•°æ—¶ï¼Œa çš„å€¼ï¼Œå¹¶å–å‡ºç¬¬ä¸€ä¸ª
     a = np.ravel(np.take(a, indices))[0]
-    # »òÕß a = a[indices][0]
+    # æˆ–è€… a = a[indices][0]
     
-    # Çó³ö c ºÍ d
+    # æ±‚å‡º c å’Œ d
     a = int(a)   
     b = np.sqrt(a ** 2 - n)    
     b = int(b)   
     c = a + b   
     d = a - b
     
-    # µ½´ïÖÕÖ¹Ìõ¼şÔò·µ»Ø
+    # åˆ°è¾¾ç»ˆæ­¢æ¡ä»¶åˆ™è¿”å›
     if c == 1 or d == 1:      
         return
     
-    # ´òÓ¡µ±Ç° c ºÍ d ²¢µİ¹é
+    # æ‰“å°å½“å‰ c å’Œ d å¹¶é€’å½’
     print(c, d)   
     factor(c)   
     factor(d)
@@ -117,22 +119,22 @@ factor(N)
 '''
 ```
 
-## Ñ°ÕÒ»ØÎÄÊı
+## å¯»æ‰¾å›æ–‡æ•°
 
 ```py
-# À´Ô´£ºNumPy Cookbook 2e Ch3.3
+# æ¥æºï¼šNumPy Cookbook 2e Ch3.3
 
-# »ØÎÄÊıÕı×Å¶Á»¹ÊÇ·´×Å¶Á¶¼Ò»Ñù
-# ÓÉÁ½¸öÁ½Î»ÊıµÄ³Ë»ı¹¹³ÉµÄ×î´ó»ØÎÄÊıÊÇ 9009 = 91 x 99
-# Ñ°ÕÒÁ½¸öÈıÎ»Êı³Ë»ı¹¹³ÉµÄ×î´ó»ØÎÄÊı
+# å›æ–‡æ•°æ­£ç€è¯»è¿˜æ˜¯åç€è¯»éƒ½ä¸€æ ·
+# ç”±ä¸¤ä¸ªä¸¤ä½æ•°çš„ä¹˜ç§¯æ„æˆçš„æœ€å¤§å›æ–‡æ•°æ˜¯ 9009 = 91 x 99
+# å¯»æ‰¾ä¸¤ä¸ªä¸‰ä½æ•°ä¹˜ç§¯æ„æˆçš„æœ€å¤§å›æ–‡æ•°
 
-# 1. ´´½¨ÈıÎ»ÊıµÄÊı×é
+# 1. åˆ›å»ºä¸‰ä½æ•°çš„æ•°ç»„
 a = np.arange(100, 1000) 
 np.testing.assert_equal(100, a[0]) np.testing.assert_equal(999, a[-1])
 
-# 2. ´´½¨Á½¸öÊı×éÖĞÔªËØµÄ³Ë»ı
-# outer ¼ÆËãÊı×éµÄÍâ»ı£¬Ò²¾ÍÊÇ a[i] x a[j] µÄ¾ØÕó
-# ravel ½«ÆäÕ¹¿ªÖ®ºó£¬¾ÍÊÇÃ¿¸öÔªËØ³Ë»ıµÄÊı×éÁË
+# 2. åˆ›å»ºä¸¤ä¸ªæ•°ç»„ä¸­å…ƒç´ çš„ä¹˜ç§¯
+# outer è®¡ç®—æ•°ç»„çš„å¤–ç§¯ï¼Œä¹Ÿå°±æ˜¯ a[i] x a[j] çš„çŸ©é˜µ
+# ravel å°†å…¶å±•å¼€ä¹‹åï¼Œå°±æ˜¯æ¯ä¸ªå…ƒç´ ä¹˜ç§¯çš„æ•°ç»„äº†
 numbers = np.outer(a, a) 
 numbers = np.ravel(numbers) 
 numbers.sort() 
@@ -140,10 +142,155 @@ np.testing.assert_equal(810000, len(numbers))
 np.testing.assert_equal(10000, numbers[0]) 
 np.testing.assert_equal(998001, numbers[-1])
 
-#3. Ñ°ÕÒ×î´óµÄ»ØÎÄÊı
+#3. å¯»æ‰¾æœ€å¤§çš„å›æ–‡æ•°
 for number in numbers[::-1]:   
     s = str(numbers[i])
     if s == s[::-1]:
         print(s)     
         break
 ```
+
+## ç¨³æ€å‘é‡
+
+```py
+# æ¥æºï¼šNumPy Cookbook 2e Ch3.4
+# ç¨³æ€å‘é‡ï¼šçŠ¶æ€è½¬ç§»çŸ©é˜µä¸­
+# ç‰¹å¾å€¼ 1 å¯¹åº”çš„å‘é‡ï¼Œæ»¡è¶³ Ax = x
+
+from __future__ import print_function 
+from matplotlib.finance import quotes_historical_yahoo 
+from datetime import date 
+import numpy as np
+
+# è·å– 'AAPL' è‚¡ç¥¨è¿‘ä¸€å¹´çš„æ”¶ç›˜ä»·
+# quotes æ˜¯å…ƒç»„çš„åˆ—è¡¨ï¼Œå…ƒç»„æ˜¯æ¯å¤©çš„æ•°æ®
+# ç»“æ„ä¸º [æ—¥æœŸ, å¼€ç›˜ä»·, æœ€é«˜ä»·, æœ€ä½ä»·, æ”¶ç›˜ä»·, æˆäº¤é‡]
+today = date.today()
+start = (today.year - 1, today.month, today.day)
+quotes = quotes_historical_yahoo('AAPL', start, today) 
+close =  [q[4] for q in quotes]
+
+# è®¡ç®—æ”¶ç›˜ä»·çš„çŠ¶æ€ï¼Œå’Œå‰ä¸€å¤©ç›¸æ¯”ï¼Œä¸Šæ¶¨ã€ä¸‹è·Œè¿˜æ˜¯æŒå¹³
+# diff æ±‚å‡ºç›¸é‚»ä¸¤é¡¹çš„å·®
+# sign å–æ¯ä¸ªå…ƒç´ çš„ç¬¦å·
+states = np.sign(np.diff(close))
+
+# åˆ›å»ºçŠ¶æ€è½¬ç§»çŸ©é˜µ
+# SM[i, j] è¡¨ç¤º signs[i] å‘ signs[j] è½¬ç§»çš„æ¦‚ç‡
+NDIM = 3 
+SM = np.zeros((NDIM, NDIM))
+
+# çŠ¶æ€åˆ—è¡¨ä¸º [ä¸‹è·Œ, æŒå¹³, ä¸Šæ¶¨]
+signs = [-1, 0, 1] 
+k = 1
+
+for i, signi in enumerate(signs):
+    # å¯¹äºæ¯ä¸€ä¸ª signi
+    # è·å–èµ·å§‹çŠ¶æ€ä¸º signi çš„ä½ç½®
+    start_indices = np.where(states[:-1] == signi)[0] 
+    
+    # æ±‚å‡º signi çš„å‡ºç°æ¬¡æ•°
+    # å¹¶åŠ ä¸Šä¸€ä¸ªå¸¸æ•°ç”¨äºå»æ‰ 0
+    N = len(start_indices) + k * NDIM
+    
+    # è·³è¿‡å‡ºç°æ¬¡æ•°ä¸º 0 çš„æƒ…å†µ
+    if N == 0:
+        continue
+
+    # è·å–å¯¹åº”çš„ç»“æŸçŠ¶æ€
+    end_values = states[start_indices + 1]
+    
+    for j, signj in enumerate(signs):
+        # å¯¹äºæ¯ä¸€ä¸ª signj
+        # è·å–èµ·å§‹çŠ¶æ€ä¸º signi æ—¶ï¼Œç»“æŸçŠ¶æ€ä¸º signj çš„æ•°é‡
+        occurrences = len(end_values[end_values == signj])
+        # é™¤ä»¥ signi çš„å‡ºç°æ¬¡æ•°å°±æ˜¯æ¦‚ç‡
+        SM[i][j] = (occurrences + k)/float(N)
+
+print(SM)
+'''
+[[ 0.5047619   0.00952381  0.48571429] 
+ [ 0.33333333  0.33333333  0.33333333] 
+ [ 0.33774834  0.00662252  0.65562914]] 
+'''
+
+# è®¡ç®— SM çš„ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡
+eig_out = np.linalg.eig(SM) 
+print(eig_out)
+'''
+(array([ 1.        ,  0.16709381,  0.32663057]), 
+ array([[  5.77350269e-01,   7.31108409e-01,   7.90138877e-04],       
+        [  5.77350269e-01,  -4.65117036e-01,  -9.99813147e-01],       
+        [  5.77350269e-01,  -4.99145907e-01,   1.93144030e-02]])) 
+'''
+
+# è®¡ç®—ç‰¹å¾å€¼ 1 çš„ä¸‹æ ‡
+idx_vec = np.where(np.abs(eig_out[0] - 1) < 0.1) 
+print("Index eigenvalue 1", idx_vec)
+# Index eigenvalue 1 (array([0]),) 
+
+# ç‰¹å¾å€¼ 1 å¯¹åº”çš„ç‰¹å¾å‘é‡
+x = eig_out[1][:,idx_vec].flatten()
+print("Steady state vector", x) 
+# Steady state vector [ 0.57735027  0.57735027  0.57735027]
+print("Check", np.dot(SM, x))
+# Check [ 0.57735027  0.57735027  0.57735027]
+```
+
+## æ¢ç´¢å¹‚ç‡
+
+```py
+# æ¥æºï¼šNumPy Cookbook 2e Ch3.5
+# å¹‚å¾‹å°±æ˜¯ y = c * x ** k çš„å‡½æ•°å…³ç³»
+
+from matplotlib.finance import quotes_historical_yahoo 
+from datetime import date 
+import numpy as np 
+import matplotlib.pyplot as plt
+
+# 1. è·å–æ”¶ç›˜ä»·
+today = date.today() 
+start = (today.year - 1, today.month, today.day)
+quotes = quotes_historical_yahoo('IBM', start, today) 
+close =  np.array([q[4] for q in quotes])
+
+# 2. è·å–æ­£çš„å¯¹æ•°æ”¶ç›Š 
+logreturns = np.diff(np.log(close)) 
+pos = logreturns[logreturns > 0]
+
+# 3. è·å–æ”¶ç›Šé¢‘ç‡
+# histogram é»˜è®¤å°†è¾“å…¥æ•°æ®åˆ†ä¸º 10 ä¸ªç»„
+# è¿”å›ä¸€ä¸ªå…ƒç»„ï¼Œç¬¬ä¸€é¡¹æ˜¯æ¯ä¸ªç»„çš„é¢‘æ•°
+# ç¬¬äºŒé¡¹æ˜¯æ¯ä¸ªç»„çš„èŒƒå›´
+counts, rets = np.histogram(pos) 
+# å–æ¯ä¸ªç»„çš„ä¸­é—´å€¼
+rets = rets[:-1] + (rets[1] - rets[0])/2 
+
+# è®¡ç®—é¢‘æ•°é 0 çš„ä½ç½®
+indices0 = np.where(counts != 0) 
+# è¿‡æ»¤æ‰é¢‘æ•°ä¸º 0 çš„æ•°æ®ç‚¹
+counts = np.take(counts, indices0)[0] 
+rets = np.take(rets, indices0)[0] 
+# è®¡ç®—å¯¹æ•°å‘¨æœŸ
+freqs = 1.0/counts 
+freqs =  np.log(freqs)
+
+# 4. å°†å‘¨æœŸå’Œæ”¶ç›Šæ‹Ÿåˆä¸ºç›´çº¿
+p = np.polyfit(rets,freqs, 1)
+
+# 5. ç»˜åˆ¶ç»“æœ
+plt.title('Power Law') 
+plt.plot(rets, freqs, 'o', label='Data') 
+plt.plot(rets, p[0] * rets + p[1], label='Fit') 
+plt.xlabel('Log Returns') 
+plt.ylabel('Log Frequencies') 
+plt.legend() 
+plt.grid() 
+plt.show()
+
+# logT = k * logR
+# T = R ** k
+# æ»¡è¶³å¹‚ç‡å…³ç³»
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-61e5d13078d09d32.jpg)
