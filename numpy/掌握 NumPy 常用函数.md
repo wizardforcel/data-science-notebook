@@ -288,8 +288,8 @@ plt.legend()
 plt.grid() 
 plt.show()
 
-# logT = k * logR
-# T = R ** k
+# log(T) = k * log(R) + c
+# T = exp(c) * R ** k
 # 满足幂率关系
 ```
 
