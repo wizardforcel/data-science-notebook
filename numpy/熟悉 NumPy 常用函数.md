@@ -211,3 +211,165 @@ print "Lowest average", bottom
 print "Bottom day of the week", np.argmin(averages
 # Bottom day of the week 4
 ```
+
+## 真实波动幅度均值（ATR）
+
+```py
+
+# 真实波动幅度（TR）定义为以下三个度量的最大值
+# 1. 当天最高价减当天最低价
+# 2. 当天最高价减前一天的收盘价的绝对值
+# 3. 前一天收盘价减当天最低价的绝对值
+
+import numpy as np
+import sys
+
+# 读入最高价、最低价、收盘价
+h, l, c = np.loadtxt('data.csv', delimiter=',', usecols=(4, 5, 6), unpack=True)
+
+# 读入数据数量
+N = int(sys.argv[1])
+# 获取最近 N 天的最高价和最低价
+h = h[-N:]
+l = l[-N:]
+
+print "len(h)", len(h), "len(l)", len(l)
+print "Close", c
+
+# 由于需要前一天的收盘价，所以往天移动一天
+previousclose = c[-N -1: -1]
+
+print "len(previousclose)", len(previousclose)
+print "Previous close", previousclose
+# maximum 逐元素获得最大值
+truerange = np.maximum(h - l, h - previousclose, previousclose - l) 
+
+print "True range", truerange
+
+# 计算 ATR
+atr = np.zeros(N)
+
+# 第一个 ATR 通过均值来计算
+atr[0] = np.mean(truerange)
+
+# 计算之后每一个 ATR
+# atr[i] = ((N - 1) * atr[i - 1] + tr[i]) / N
+for i in range(1, N):
+   atr[i] = (N - 1) * atr[i - 1] + truerange[i]
+   atr[i] /= N
+
+print "ATR", atr
+```
+
+## 简单滑动均值
+
+```py
+import numpy as np
+import sys
+from matplotlib.pyplot import plot
+from matplotlib.pyplot import show
+
+N = int(sys.argv[1])
+
+# 使用 ones 函数创建大小为 N 的数组
+# 并除以 N 来创建权重
+weights = np.ones(N) / N
+print "Weights", weights
+# 假设 N 为 5：
+# Weights [ 0.2  0.2  0.2  0.2  0.2]
+
+# 读入收盘价
+c = np.loadtxt('data.csv', delimiter=',', usecols=(6,), unpack=True)
+
+# 调用 convolve 函数来计算滑动平均
+sma = np.convolve(weights, c)[N-1:-N+1]
+
+# 绘制函数图像
+t = np.arange(N - 1, len(c))
+plot(t, c[N-1:], lw=1.0)
+plot(t, sma, lw=2.0)
+show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-8639b45349862ac2.jpg)
+
+## 指数滑动均值
+
+```py
+import numpy as np
+import sys
+from matplotlib.pyplot import plot
+from matplotlib.pyplot import show
+
+x = np.arange(5)
+# exp 计算 e 的 x 次方
+print "Exp", np.exp(x)
+# Exp [  1.           2.71828183   7.3890561   20.08553692  54.59815003]
+# linspace 使用起始值、终止值和数量，返回等间隔的数组
+print "Linspace", np.linspace(-1, 0, 5)
+# Linspace [-1.   -0.75 -0.5  -0.25  0.  ]
+
+N = int(sys.argv[1])
+
+# 计算权重
+weights = np.exp(np.linspace(-1., 0., N))
+weights /= weights.sum()
+print "Weights", weights
+# 假设 N 为 5：
+# Weights [ 0.11405072  0.14644403  0.18803785  0.24144538  0.31002201]
+
+# 读入收盘价
+c = np.loadtxt('data.csv', delimiter=',', usecols=(6,), unpack=True)
+# 使用 convolve 计算指数滑动均值
+ema = np.convolve(weights, c)[N-1:-N+1]
+
+# 绘制函数图像
+t = np.arange(N - 1, len(c))
+plot(t, c[N-1:], lw=1.0)
+plot(t, ema, lw=2.0)
+show()
+```
+
+## 剪切和压缩数组
+
+```py
+import numpy as np
+
+a = np.arange(5)
+print "a =", a
+# a = [0 1 2 3 4]
+
+# clip 用于剪切数组
+# 小于最小值的元素会替换成最小值
+# 大于最大值的元素会替换成最大值
+print "Clipped", a.clip(1, 2)
+# Clipped [1 1 2 2 2]
+
+a = np.arange(4)
+print a
+# [0 1 2 3]
+
+# compress 用于过滤元素
+# 等价于 a[a > 2]
+print "Compressed", a.compress(a > 2)
+# Compressed [3]
+```
+
+## 计算阶乘
+
+```py
+import numpy as np
+
+b = np.arange(1, 9)
+print "b =", b
+# b = [1 2 3 4 5 6 7 8]
+
+# prod 用于求出各元素乘积
+print "Factorial", b.prod()
+# Factorial 40320
+
+# cumprod 求出累积连乘
+# P[i] = a[0] * ... * a[i]
+print "Factorials", b.cumprod()
+# Factorials [    1     2     6    24   120   720  5040 40320]
+```
