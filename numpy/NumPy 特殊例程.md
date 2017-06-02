@@ -104,15 +104,6 @@ from matplotlib.pyplot import plot, show
 print "Future value", np.fv(0.03/4, 5 * 4, -10, -1000)
 # Future value 1376.09633204
 
-# 现值预测
-# pv(rate, n, pmt, fv)
-# fv 为期值，其它同上
-# 这个例子是计算，五年后想得到 1376.09633204 元，其它条件同上，现在应存多少钱。
-print "Present value", np.pv(0.03/4, 5 * 4, -10, 1376.09633204)
-Present value -999.999999999
-# Present value -999.999999999
-
-
 fvals = []
 
 # 计算第 i 年有多少钱
@@ -121,22 +112,173 @@ for i in xrange(1, 10):
 
 plot(fvals, 'bo')
 show()
+
+# 现值预测
+# pv(rate, n, pmt, fv)
+# fv 为期值，其它同上
+# 这个例子是计算，五年后想得到 1376.09633204 元，其它条件同上，现在应存多少钱。
+print "Present value", np.pv(0.03/4, 5 * 4, -10, 1376.09633204)
+Present value -999.999999999
+# Present value -999.999999999
+
+# 周期性投入预测
+# pmt(rate, n, pv, fv=0) 参数含义同上
+# 假设你贷款 100 万元，利率为 10%，需要在 30 年内还完，每个月需要还多少呢？
+print "Payment", np.pmt(0.01/12, 12 * 30, 10000000)
+# Payment -32163.9520447
+
+# 周期数量预测
+# nper(rate, pmt, fv, pv=0) 参数含义同上
+# 假设你贷款 9000 元，利率为 10%，每个月还 100 元
+# 多少个月能还完？
+print "Number of payments", np.nper(0.10/12, -100, 9000)
+# Number of payments 167.047511801
+
+# 利率
+# 假设我们知道除了利率之外的其他参数
+# rate(n, pmt, pv, fv)
+print "Interest rate", 12 * np.rate(167, -100, 9000, 0)
+# Interest rate 0.0999756420664
 ```
 
 ![](http://upload-images.jianshu.io/upload_images/118142-327817cf12e45930.jpg)
 
 
-> 注：
+注：
 
-> 假设现在存入`pv`元钱（正），之后就不存了，年利率为`rate`，`n`年之后余额是`pv * (1 + rate) ** n`。
+假设现在存入`pv`元钱（正），之后就不存了，年利率为`rate`，`n`年之后余额是`pv * (1 + rate) ** n`。
 
-> 如果之后每年都往里面存 pmt 元（正），`fv[i] = fv[i - 1] * (1 + rate) + pmt`。
+如果之后每年都往里面存 pmt 元（正），`fv[i] = fv[i - 1] * (1 + rate) + pmt`。
 
-> | 年数 | 余额 |
-> | 0 | `pv` |
-> | 1 | `pv * (1 + rate) + pmt` |
-> | 2 | `pv * (1 + rate) ** 2 + pmt * (1 + rate) + pmt` |
-> | 3 | `pv * (1 + rate) ** 3 + pmt * (1 + rate) ** 2 + pmt * (1 + rate) + pmt` |
-> | n | `pv * (1 + rate) ** n + pmt * ((1 + rate) ** n - 1) / rate` |
+| 年数 | 余额 |
+| --- | --- |
+| 0 | `pv` |
+| 1 | `pv * (1 + rate) + pmt` |
+| 2 | `pv * (1 + rate) ** 2 + pmt * (1 + rate) + pmt` |
+| 3 | `pv * (1 + rate) ** 3 + pmt * (1 + rate) ** 2 + pmt * (1 + rate) + pmt` |
+| n | `pv * (1 + rate) ** n + pmt * ((1 + rate) ** n - 1) / rate` |
 
-> `np.fv`中的`pv`和`pmt`是负的，求完之后取相反数即可。
+`np.fv`中的`pv`和`pmt`是负的，求完之后取相反数即可。
+
+## 计算净现值（NPV）、内部收益率（IRR）
+
+```py
+import numpy as np
+
+# 生成五个 100 以内的随机数作为现金流序列
+# -100 为初始值
+cashflows = np.random.randint(100, size=5)
+cashflows = np.insert(cashflows, 0, -100)
+print "Cashflows", cashflows
+# Cashflows [-100   38   48   90   17   36]
+
+# npv(rate, vals) 计算净现值
+# npv = np.sum(vals / (np.ones(length) + rate) ** np.arange(length))
+# 其中 l = len(vals)
+print "Net present value", np.npv(0.03, cashflows)
+# Net present value 107.435682443
+
+# irr(vals) 计算内部收益率
+# 满足 npv(irr, vals) == 0
+print "Internal rate of return", np.irr([-100, 38, 48, 90,
+  17, 36])
+# Internal rate of return 0.373420226888
+```
+
+## 布林窗口
+
+![](https://docs.scipy.org/doc/numpy/_images/math/96c776a93fb59bb1d209e56851970258942c7b09.png)
+
+```py
+# 布林窗口是三角平滑窗口
+# 参数为 n 的布林函数是 (0,0) 到 (n/2,1) 再到 (n,0) 的线段
+# bartlett 函数返回布林窗口函数值的数组，x 范围从 0 到 n
+window = np.bartlett(42)
+plot(window)
+show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-46399225604487f9.jpg)
+
+## 使用布莱克曼窗口来平滑股票价格
+
+![](https://docs.scipy.org/doc/numpy/_images/math/8f1fda8b758f62bab8920b303c33c2021ffaab1e.png)
+
+```py
+import numpy as np
+from matplotlib.pyplot import plot, show, legend
+from matplotlib.dates import datestr2num
+import sys
+
+# 获取 AAPL 收盘价
+closes=np.loadtxt('AAPL.csv', delimiter=',', usecols=(6,), converters={1:datestr2num}, unpack=True)
+
+# 读入天数
+N = int(sys.argv[1])
+
+# 创建布莱克曼窗口
+window = np.blackman(N)
+
+# 使用卷积函数来平滑收盘价
+smoothed = np.convolve(window/window.sum(), closes, mode='same')
+
+# 绘制原始和平滑后的收盘价
+plot(smoothed[N:-N], lw=2, label="smoothed")
+plot(closes[N:-N], label="closes")
+legend(loc='best')
+show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-f7271a04b41d90f1.jpg)
+
+## 汉明窗口
+
+![](https://docs.scipy.org/doc/numpy/_images/math/dfdda51c608b4c7d6ddae294f7ff2e5468ffd693.png)
+
+```py
+# 使用方法同布林窗口
+window = np.hamming(42)
+plot(window)
+show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-beac190150c18f7c.jpg)
+
+## 凯撒窗口
+
+![](https://docs.scipy.org/doc/numpy/_images/math/dbd1a15a739805bd305514e6f63fbee081ca29bd.png)
+
+![](https://docs.scipy.org/doc/numpy/_images/math/679bc177e1e9a9e01781bb860c956dc85d798b15.png)
+
+```py
+# kaiser(M, beta)
+window = np.kaiser(42, 14)
+plot(window)
+show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-7bf79d9afaf68c8e.jpg)
+
+## 修正贝塞尔函数
+
+```py
+x = np.linspace(0, 4, 100)
+vals = np.i0(x)
+plot(x, vals)
+show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-e9db37c1074a076c.jpg)
+
+## sinc 函数
+
+```py
+# sinc(x) = sin(pi * x) / (pi * x)
+# 在 0 处取极限值 1
+x = np.linspace(0, 4, 100)
+vals = np.sinc(x)
+plot(x, vals)
+show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-765eb00484954619.jpg)
