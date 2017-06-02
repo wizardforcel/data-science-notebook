@@ -1,10 +1,10 @@
-# ÉîÈë NumPy Ä£¿é
+# æ·±å…¥ NumPy æ¨¡å—
 
 ```py
-# À´Ô´£ºNumPy Biginner's Guide 2e ch6
+# æ¥æºï¼šNumPy Biginner's Guide 2e ch6
 ```
 
-## ¾ØÕóµÄÄæ
+## çŸ©é˜µçš„é€†
 
 ```py
 import numpy as np
@@ -18,7 +18,7 @@ A
  [ 4 -3  8]]
 '''
 
-# Çó½â¾ØÕóµÄÄæ£¬²»¿ÉÄæ»á±¨´í
+# æ±‚è§£çŸ©é˜µçš„é€†ï¼Œä¸å¯é€†ä¼šæŠ¥é”™
 inverse = np.linalg.inv(A)
 print "inverse of A\n", inverse
 '''
@@ -37,7 +37,7 @@ Check
 '''
 ```
 
-## Çó½âÏßĞÔ·½³Ì×é
+## æ±‚è§£çº¿æ€§æ–¹ç¨‹ç»„
 
 ```py
 import numpy as np
@@ -58,9 +58,9 @@ b
 [ 0  8 -9]
 '''
 
-# solve Çó³öÏòÁ¿ x£¬Ê¹ Ax = b
-# ÄÚ²¿Ê¹ÓÃ np.dot(A.I, b) À´¼ÆËã
-# ËùÒÔ A ²»¿ÉÄæÊ±±¨´í
+# solve æ±‚å‡ºå‘é‡ xï¼Œä½¿ Ax = b
+# å†…éƒ¨ä½¿ç”¨ np.dot(A.I, b) æ¥è®¡ç®—
+# æ‰€ä»¥ A ä¸å¯é€†æ—¶æŠ¥é”™
 x = np.linalg.solve(A, b)
 print "Solution", x
 '''
@@ -74,12 +74,12 @@ Check
 '''
 ```
 
-## ÌØÕ÷ÖµºÍÌØÕ÷ÏòÁ¿
+## ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡
 
 ```py
 
-# Èç¹û Ax = ¦Ëx£¬²¢ÇÒ x ·ÇÁã
-# Ôò ¦Ë ÊÇ A µÄÌØÕ÷Öµ£¬x ÊÇ A ¹ØÓÚ ¦Ë µÄÌØÕ÷ÏòÁ¿
+# å¦‚æœ Ax = Î»xï¼Œå¹¶ä¸” x éé›¶
+# åˆ™ Î» æ˜¯ A çš„ç‰¹å¾å€¼ï¼Œx æ˜¯ A å…³äº Î» çš„ç‰¹å¾å‘é‡
 import numpy as np
 
 A = np.mat("3 -2;1 0")
@@ -90,12 +90,12 @@ A
  [ 1  0]]
 '''
 
-# eigvals ½ö½öÇó½âÌØÕ÷Öµ
+# eigvals ä»…ä»…æ±‚è§£ç‰¹å¾å€¼
 print "Eigenvalues", np.linalg.eigvals(A)
 # Eigenvalues [ 2.  1.]
 
-# eig Çó½âÌØÕ÷ÖµºÍÌØÕ÷ÏòÁ¿
-# ÌØÕ÷ÏòÁ¿ÊÇÊı×éµÄÁĞ
+# eig æ±‚è§£ç‰¹å¾å€¼å’Œç‰¹å¾å‘é‡
+# ç‰¹å¾å‘é‡æ˜¯æ•°ç»„çš„åˆ—
 eigenvalues, eigenvectors = np.linalg.eig(A)
 print "First tuple of eig", eigenvalues
 print "Second tuple of eig\n", eigenvectors
@@ -122,14 +122,14 @@ Right [[ 0.70710678]
 '''
 ```
 
-## ÆæÒìÖµ·Ö½â
+## å¥‡å¼‚å€¼åˆ†è§£
 
 ```py
-# ÆæÒìÖµÊÇ A * A.T ÌØÕ÷ÖµµÄËãÊõÆ½·½¸ù
-# Èô A ÊÇ mxn ½×¾ØÕó
-# ÆæÒìÖµ·Ö½â½« A ·Ö½â³É USV
-# U ÊÇ mxm ½×¡£S ÊÇ mxm ½×¶Ô½Ç¾ØÕó£¬ÓÉÆæÒìÖµ¹¹³É
-# V ÊÇ mxn ½×
+# å¥‡å¼‚å€¼æ˜¯ A * A.T ç‰¹å¾å€¼çš„ç®—æœ¯å¹³æ–¹æ ¹
+# è‹¥ A æ˜¯ mxn é˜¶çŸ©é˜µ
+# å¥‡å¼‚å€¼åˆ†è§£å°† A åˆ†è§£æˆ USV
+# U æ˜¯ mxm é˜¶ã€‚S æ˜¯ mxm é˜¶å¯¹è§’çŸ©é˜µï¼Œç”±å¥‡å¼‚å€¼æ„æˆ
+# V æ˜¯ mxn é˜¶
 
 import numpy as np
 
@@ -141,7 +141,7 @@ A
  [ 8  7 -2]]
 '''
 
-# linalg.svd Çó½âÆæÒìÖµ
+# linalg.svd æ±‚è§£å¥‡å¼‚å€¼
 U, Sigma, V = np.linalg.svd(A, full_matrices=False)
 
 print "U"
@@ -181,12 +181,12 @@ print np.linalg.eigvals(A * A.T) ** 0.5
 
 ```
 
-## ¹ãÒåÄæ¾ØÕó
+## å¹¿ä¹‰é€†çŸ©é˜µ
 
 ```py
-# Èô´æÔÚÎ¨Ò»¾ØÕó M£¬Âú×ã
-# AMA = A£¬MAM = M£¬AM ºÍ MA ¾ùÎª¶Ô³Æ¾ØÕó
-# Ôò M ÊÇ A µÄ¹ãÒåÄæ¾ØÕó
+# è‹¥å­˜åœ¨å”¯ä¸€çŸ©é˜µ Mï¼Œæ»¡è¶³
+# AMA = Aï¼ŒMAM = Mï¼ŒAM å’Œ MA å‡ä¸ºå¯¹ç§°çŸ©é˜µ
+# åˆ™ M æ˜¯ A çš„å¹¿ä¹‰é€†çŸ©é˜µ
 
 import numpy as np
 
@@ -198,7 +198,7 @@ A
  [ 8  7 -2]]
 '''
 
-# linalg.pinv Çó½â¹ãÒåÄæ
+# linalg.pinv æ±‚è§£å¹¿ä¹‰é€†
 pseudoinv = np.linalg.pinv(A)
 print "Pseudo inverse\n", pseudoinv
 '''
@@ -215,7 +215,7 @@ Check [[  1.00000000e+00   0.00000000e+00]
 '''
 ```
 
-## ¼ÆËã¾ØÕóĞĞÁĞÊ½
+## è®¡ç®—çŸ©é˜µè¡Œåˆ—å¼
 
 ```py
 import numpy as np
@@ -228,57 +228,57 @@ A
  [ 5.  6.]]
 '''
 
-# linalg.det Çó½âĞĞÁĞÊ½
-# ¶ÔÓÚ¶ş½×¾ØÕó
+# linalg.det æ±‚è§£è¡Œåˆ—å¼
+# å¯¹äºäºŒé˜¶çŸ©é˜µ
 # det(A) = A[0][0] * A[1][1] - A[0][1] * A[1][0]
 print "Determinant", np.linalg.det(A)
 # Determinant -2.0
 ```
 
-## ¿ìËÙ¸µÀïÒ¶±ä»»£¨FFT£©
+## å¿«é€Ÿå‚…é‡Œå¶å˜æ¢ï¼ˆFFTï¼‰
 
 ```py
 import numpy as np
 from matplotlib.pyplot import plot, show
 
-# ´´½¨ 30 ¸öµãµÄÓàÏÒ²¨
+# åˆ›å»º 30 ä¸ªç‚¹çš„ä½™å¼¦æ³¢
 x =  np.linspace(0, 2 * np.pi, 30)
 wave = np.cos(x)
 
-# Ê¹ÓÃ fft º¯Êı±ä»»ÓàÏÒ²¨
+# ä½¿ç”¨ fft å‡½æ•°å˜æ¢ä½™å¼¦æ³¢
 transformed = np.fft.fft(wave)
 
-# ÑéÖ¤ÊÇ·ñÄÜ¹»»¹Ô­Êı¾İ
+# éªŒè¯æ˜¯å¦èƒ½å¤Ÿè¿˜åŸæ•°æ®
 print np.all(np.abs(np.fft.ifft(transformed) - wave) < 10 ** -9)
 # True
 
-# »æÖÆ±ä»»ºóµÄĞÅºÅ
+# ç»˜åˆ¶å˜æ¢åçš„ä¿¡å·
 plot(transformed)
 show()
 ```
 
 ![](http://upload-images.jianshu.io/upload_images/118142-225ebdf16fd50ecb.jpg)
 
-## µ÷ÕûÆµÂÊ
+## è°ƒæ•´é¢‘ç‡
 
 ```py
 import numpy as np
 from matplotlib.pyplot import plot, show
 
-# ´´½¨ 30 ¸öµãµÄÓàÏÒ²¨
+# åˆ›å»º 30 ä¸ªç‚¹çš„ä½™å¼¦æ³¢
 x =  np.linspace(0, 2 * np.pi, 30)
 wave = np.cos(x)
 
-# Ê¹ÓÃ fft º¯Êı±ä»»ÓàÏÒ²¨
+# ä½¿ç”¨ fft å‡½æ•°å˜æ¢ä½™å¼¦æ³¢
 transformed = np.fft.fft(wave)
 
-# Ê¹ÓÃ fftshift  º¯Êıµ÷ÕûĞÅºÅ
+# ä½¿ç”¨ fftshift  å‡½æ•°è°ƒæ•´ä¿¡å·
 shifted = np.fft.fftshift(transformed)
 
-# ¼ì²éÊÇ·ñ¿ÉÒÔ»¹Ô­
+# æ£€æŸ¥æ˜¯å¦å¯ä»¥è¿˜åŸ
 print np.all(np.abs(np.fft.ifftshift(shifted) - transformed) < 10 ** -9)
 
-# »æÖÆĞÅºÅ
+# ç»˜åˆ¶ä¿¡å·
 plot(transformed, lw=2)
 plot(shifted, lw=3)
 show()
@@ -286,27 +286,27 @@ show()
 
 ![](http://upload-images.jianshu.io/upload_images/118142-0c289ee5b6981ff2.jpg)
 
-## Ëæ»úÓÎ×ß
+## éšæœºæ¸¸èµ°
 
 ```py
 import numpy as np
 from matplotlib.pyplot import plot, show
 
-# ´´½¨´óĞ¡Îª 10000 µÄÓà¶îÊı×é
-# ³õÊ¼Óà¶îÎª 1000
+# åˆ›å»ºå¤§å°ä¸º 10000 çš„ä½™é¢æ•°ç»„
+# åˆå§‹ä½™é¢ä¸º 1000
 cash = np.zeros(10000)
 cash[0] = 1000
 
-# Éú³ÉËæ»úÊı£¬Æä¸ÅÂÊÂú×ã¶şÏî·Ö²¼ B(n = 9, p = 0.5)
+# ç”Ÿæˆéšæœºæ•°ï¼Œå…¶æ¦‚ç‡æ»¡è¶³äºŒé¡¹åˆ†å¸ƒ B(n = 9, p = 0.5)
 # P(x = k) = C(n, k) * p ** k * (1 - p) ** (n - k)
 # x: 0 ~ 9
 outcome = np.random.binomial(9, 0.5, size=len(cash))
 
 for i in range(1, len(cash)):
 
-    # Èç¹ûËæ»úÊıĞ¡ÓÚ 5£¬Óà¶î¼õÒ»£¬·ñÔò¼ÓÒ»
-    # p = 0.5 Ê±£¬¶şÏî·Ö²¼ÊÇ¶Ô³ÆµÄ
-    # ËùÒÔĞ¡ÓÚ 5 µÄ¸ÅÂÊÓ¦¸ÃÊÇ 0.5
+    # å¦‚æœéšæœºæ•°å°äº 5ï¼Œä½™é¢å‡ä¸€ï¼Œå¦åˆ™åŠ ä¸€
+    # p = 0.5 æ—¶ï¼ŒäºŒé¡¹åˆ†å¸ƒæ˜¯å¯¹ç§°çš„
+    # æ‰€ä»¥å°äº 5 çš„æ¦‚ç‡åº”è¯¥æ˜¯ 0.5
     if outcome[i] < 5:
       cash[i] = cash[i - 1] - 1
     elif outcome[i] < 10:
@@ -317,52 +317,52 @@ for i in range(1, len(cash)):
 print outcome.min(), outcome.max()
 # 0 9
 
-# »æÖÆÓà¶î±ä»¯Çé¿ö
+# ç»˜åˆ¶ä½™é¢å˜åŒ–æƒ…å†µ
 plot(np.arange(len(cash)), cash)
 show()
 ```
 
 ![](http://upload-images.jianshu.io/upload_images/118142-a2a55d780cdc27d1.jpg)
 
-## Ä£ÄâÓÎÏ·½ÚÄ¿
+## æ¨¡æ‹Ÿæ¸¸æˆèŠ‚ç›®
 
 ```py
-# ÓÎÏ·½ÚÄ¿ÖĞÓĞÒ»¸öÍ°£¬ÀïÃæÓĞ 25 ¸öÕı³£Çò
-# ºÍÒ»¸öµ¹Ã¹Çò
-# Ñ¡ÊÖÕıÈ·»Ø´ğÎÊÌâºó¶¼ĞèÒªÈ¡³öÈı¸öÇò
-# Èç¹ûÈı¸ö¶¼ÊÇÆÕÍ¨Çò£¬·ÖÊı¼ÓÒ»
-# ·ñÔò·ÖÊı¼õÁù
+# æ¸¸æˆèŠ‚ç›®ä¸­æœ‰ä¸€ä¸ªæ¡¶ï¼Œé‡Œé¢æœ‰ 25 ä¸ªæ­£å¸¸çƒ
+# å’Œä¸€ä¸ªå€’éœ‰çƒ
+# é€‰æ‰‹æ­£ç¡®å›ç­”é—®é¢˜åéƒ½éœ€è¦å–å‡ºä¸‰ä¸ªçƒ
+# å¦‚æœä¸‰ä¸ªéƒ½æ˜¯æ™®é€šçƒï¼Œåˆ†æ•°åŠ ä¸€
+# å¦åˆ™åˆ†æ•°å‡å…­
 
 import numpy as np
 from matplotlib.pyplot import plot, show
 
-# ´´½¨·ÖÊıÊı×é
+# åˆ›å»ºåˆ†æ•°æ•°ç»„
 points = np.zeros(100)
 
-# hypergeometric º¯ÊıÉú³ÉµÄËæ»úÊıÂú×ã³¬¼¸ºÎ·Ö²¼
-# ³¬¼¸ºÎ·Ö²¼ÃèÊöÁË£¬´ü×ÓÀïÓĞÁ½ÀàÇò£¬´Ó´ü×ÓÀïÈ¡³ö¼¸¸öÇò£¬È¡µ½ k ¸öÒ»ÀàÇòµÄ¸ÅÂÊ¡£
-# ²ÎÊı·Ö±ğÎª£ºÆÕÍ¨ÇòµÄ¸öÊı£¬µ¹Ã¹ÇòµÄ¸öÊı£¬È¡³öµÄ¸öÊı
-# Ëæ»úÊıÄ£ÄâÁËÈ¡³öµÄÇòÖĞÆÕÍ¨ÇòµÄ¸öÊı
+# hypergeometric å‡½æ•°ç”Ÿæˆçš„éšæœºæ•°æ»¡è¶³è¶…å‡ ä½•åˆ†å¸ƒ
+# è¶…å‡ ä½•åˆ†å¸ƒæè¿°äº†ï¼Œè¢‹å­é‡Œæœ‰ä¸¤ç±»çƒï¼Œä»è¢‹å­é‡Œå–å‡ºå‡ ä¸ªçƒï¼Œå–åˆ° k ä¸ªä¸€ç±»çƒçš„æ¦‚ç‡ã€‚
+# å‚æ•°åˆ†åˆ«ä¸ºï¼šæ™®é€šçƒçš„ä¸ªæ•°ï¼Œå€’éœ‰çƒçš„ä¸ªæ•°ï¼Œå–å‡ºçš„ä¸ªæ•°
+# éšæœºæ•°æ¨¡æ‹Ÿäº†å–å‡ºçš„çƒä¸­æ™®é€šçƒçš„ä¸ªæ•°
 outcomes = np.random.hypergeometric(25, 1, 3, size=len(points))
 
 for i in range(len(points)):
    if outcomes[i] == 3:
-      # Èç¹ûÈı¸ö¶¼ÊÇÆÕÍ¨Çò£¬·ÖÊı¼ÓÒ»
+      # å¦‚æœä¸‰ä¸ªéƒ½æ˜¯æ™®é€šçƒï¼Œåˆ†æ•°åŠ ä¸€
       points[i] = points[i - 1] + 1
    elif outcomes[i] == 2:
-      # Èç¹û´æÔÚµ¹Ã¹Çò£¬·ÖÊı¼õÁù
+      # å¦‚æœå­˜åœ¨å€’éœ‰çƒï¼Œåˆ†æ•°å‡å…­
       points[i] = points[i - 1] - 6
    else:
       print outcomes[i]
 
-# »æÖÆ·ÖÊı±ä»¯Çé¿ö
+# ç»˜åˆ¶åˆ†æ•°å˜åŒ–æƒ…å†µ
 plot(np.arange(len(points)), points)
 show()
 ```
 
 ![](http://upload-images.jianshu.io/upload_images/118142-43e3c61f417e7a60.jpg)
 
-## »æÖÆÕıÌ¬·Ö²¼
+## ç»˜åˆ¶æ­£æ€åˆ†å¸ƒ
 
 ![](https://imgsa.baidu.com/baike/s%3D205/sign=2abf505a42166d223c77129473220945/342ac65c1038534384b650b09213b07eca808822.jpg)
 
@@ -372,15 +372,15 @@ import matplotlib.pyplot as plt
 
 N=10000
 
-# Éú³ÉËæ»úÊı£¬Æä¸ÅÂÊÂú×ãÕıÌ¬·Ö²¼ N(mu = 0, sigma = 1)
+# ç”Ÿæˆéšæœºæ•°ï¼Œå…¶æ¦‚ç‡æ»¡è¶³æ­£æ€åˆ†å¸ƒ N(mu = 0, sigma = 1)
 normal_values = np.random.normal(size=N)
 
-# »æÖÆÖ±·½Í¼£¬ºáÖáÊÇ·Ö×é£¬×İÖáÊÇ³öÏÖÆµÂÊ
-# µÚ¶ş¸ö²ÎÊı±íÊ¾ 100 ¸ö×é£¨Ä¬ÈÏ 10 ¸ö£©
-# bins ÊÇ×éÖĞÖµ
+# ç»˜åˆ¶ç›´æ–¹å›¾ï¼Œæ¨ªè½´æ˜¯åˆ†ç»„ï¼Œçºµè½´æ˜¯å‡ºç°é¢‘ç‡
+# ç¬¬äºŒä¸ªå‚æ•°è¡¨ç¤º 100 ä¸ªç»„ï¼ˆé»˜è®¤ 10 ä¸ªï¼‰
+# bins æ˜¯ç»„ä¸­å€¼
 dummy, bins, dummy = plt.hist(normal_values, np.sqrt(N), normed=True, lw=1)
 
-# »æÖÆÕıÌ¬·Ö²¼¸ÅÂÊÃÜ¶Èº¯Êı
+# ç»˜åˆ¶æ­£æ€åˆ†å¸ƒæ¦‚ç‡å¯†åº¦å‡½æ•°
 sigma = 1
 mu = 0
 plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ),lw=2)
@@ -389,19 +389,19 @@ plt.show()
 
 ![](http://upload-images.jianshu.io/upload_images/118142-aa1c1a58015cecc4.jpg)
 
-## »æÖÆ¶ÔÊıÕıÌ¬·Ö²¼
+## ç»˜åˆ¶å¯¹æ•°æ­£æ€åˆ†å¸ƒ
 
 ![](https://imgsa.baidu.com/baike/s%3D163/sign=966dfaa16009c93d03f20af1ac3cf8bb/43a7d933c895d143f231548c74f082025baf07dd.jpg)
 
 ```py
-# ºÍÉÏÒ»¶Î´úÂë»ù±¾Ò»Ñù
+# å’Œä¸Šä¸€æ®µä»£ç åŸºæœ¬ä¸€æ ·
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 N=10000
 
-# ½«ÕâÀï¸Ä³É lognormal À´Éú³É¶ÔÊıÕıÌ¬·Ö²¼µÄËæ»úÊı
+# å°†è¿™é‡Œæ”¹æˆ lognormal æ¥ç”Ÿæˆå¯¹æ•°æ­£æ€åˆ†å¸ƒçš„éšæœºæ•°
 lognormal_values = np.random.lognormal(size=N)
 
 dummy, bins, dummy = plt.hist(lognormal_values, np.sqrt(N), normed=True, lw=1)
@@ -409,7 +409,7 @@ dummy, bins, dummy = plt.hist(lognormal_values, np.sqrt(N), normed=True, lw=1)
 sigma = 1
 mu = 0
 x = np.linspace(min(bins), max(bins), len(bins))
-# ĞŞ¸ÄÕâÀïµÄ¹«Ê½
+# ä¿®æ”¹è¿™é‡Œçš„å…¬å¼
 pdf = np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2))/ (x * sigma * np.sqrt(2 * np.pi))
 plt.plot(x, pdf,lw=3)
 plt.show()
