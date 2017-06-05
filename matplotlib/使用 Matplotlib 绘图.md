@@ -348,7 +348,7 @@ plt.show()
 
 ```py
 # 绘制 z = x ** 2 + y ** 2 的热力图
-# 热力图的横轴是 x，纵轴是 y，颜色是 z·
+# 热力图的横轴是 x，纵轴是 y，颜色是 z
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
