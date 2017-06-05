@@ -173,6 +173,52 @@ plt.show()
 
 ![](http://upload-images.jianshu.io/upload_images/118142-ea84aed4760be212.jpg)
 
+## 绘制对数刻度
+
+```py
+from matplotlib.finance import quotes_historical_yahoo
+from matplotlib.dates import DateFormatter
+from matplotlib.dates import DayLocator
+from matplotlib.dates import MonthLocator
+import sys
+from datetime import date
+import matplotlib.pyplot as plt
+import numpy as np
+
+today = date.today()
+start = (today.year - 1, today.month, today.day)
+
+symbol = 'DISH’
+
+if len(sys.argv) == 2:
+   symbol = sys.argv[1]
+
+# 获取 DASH 一年的日期和成交量
+quotes = quotes_historical_yahoo(symbol, start, today)
+quotes = np.array(quotes)
+dates = quotes.T[0]
+volume = quotes.T[5]
+
+
+alldays = DayLocator()              
+months = MonthLocator()
+month_formatter = DateFormatter("%b %Y")
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+# semilogy 将 y 轴绘制为对数刻度
+# 也就是绘制 date 与 log10(volume) 的图像
+# 但是刻度标签是 volume，也就是 10 ** 1, 10 ** 2, ....
+plt.semilogy(dates, volume)
+ax.xaxis.set_major_locator(months)
+ax.xaxis.set_minor_locator(alldays)
+ax.xaxis.set_major_formatter(month_formatter)
+fig.autofmt_xdate()
+plt.show
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-d81ff7c74a28e92b.jpg)
+
 ## 绘制收益和成交量差值的散点图
 
 ```py
@@ -212,3 +258,152 @@ plt.show()
 ```
 
 ![](http://upload-images.jianshu.io/upload_images/118142-1a0ba265896ac51f.jpg)
+
+## 基于条件填充区域
+
+```py
+from matplotlib.finance import quotes_historical_yahoo
+from matplotlib.dates import DateFormatter 
+from matplotlib.dates import DayLocator 
+from matplotlib.dates import MonthLocator
+import sys
+from datetime import date
+import matplotlib.pyplot as plt
+import numpy as np
+
+today = date.today()
+start = (today.year - 1, today.month, today.day)
+
+symbol = 'DISH’
+
+if len(sys.argv) == 2:
+   symbol = sys.argv[1]
+
+quotes = quotes_historical_yahoo(symbol, start, today)
+quotes = np.array(quotes)
+dates = quotes.T[0]
+close = quotes.T[4]
+
+
+alldays = DayLocator()              
+months = MonthLocator()
+month_formatter = DateFormatter("%b %Y")
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+# 绘制收盘价
+ax.plot(dates, close)
+# fill_between 用于填充区域
+# 参数依次为 x 值，y 值下界，y 值上界，
+# 需要填充的位置（布尔索引），填充色，不透明度
+# 如果收盘价高于均值，将收盘价和最小值之间填充为绿色
+plt.fill_between(dates, close.min(), close, where=close>close.mean(), facecolor="green", alpha=0.4)
+# 如果收盘价低于均值，将收盘价和最小值之间填充为红色
+plt.fill_between(dates, close.min(), close, where=close<close.mean(), facecolor="red", alpha=0.4)
+ax.xaxis.set_major_locator(months)
+ax.xaxis.set_minor_locator(alldays)
+ax.xaxis.set_major_formatter(month_formatter)
+ax.grid(True)
+fig.autofmt_xdate()
+plt.show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-bd3f6f9e71ae7f11.jpg)
+
+
+## 使用图例和标注
+
+## 三维绘图
+
+```py
+# 绘制 z = x ** 2 + y ** 2
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import cm
+
+# 获取 Figure 实例
+fig = plt.figure()
+# 获取 Axes 实例，projection='3d' 表示三维绘图
+ax = fig.add_subplot(111, projection='3d')
+
+u = np.linspace(-1, 1, 100)
+
+# x 和 y 从 -1 到 1 取 100 个点
+# meshgrid 创建二维的网格，包含每一组 x, y
+x, y = np.meshgrid(u, u)
+z = x ** 2 + y ** 2
+# plot_surface 用于绘制曲面
+# rstride 和 cstride 是行和列步长
+# 从输入数组中每四个点取一个点
+# cmap 是颜色映射表
+ax.plot_surface(x, y, z,  rstride=4, cstride=4, cmap=cm.YlGnBu_r)
+
+plt.show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-cb58c289fb0527dc.jpg)
+
+## 热力图
+
+```py
+# 绘制 z = x ** 2 + y ** 2 的热力图
+# 热力图的横轴是 x，纵轴是 y，颜色是 z·
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import cm
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+u = np.linspace(-1, 1, 100)
+
+x, y = np.meshgrid(u, u)
+z = x ** 2 + y ** 2
+# contourf 用于绘制热力图
+ax.contourf(x, y, z)
+
+plt.show()
+```
+
+## 绘制动画
+
+```py
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+# x, y, z 都是 10 个 0 ~ 1 的随机值
+N = 10
+x = np.random.rand(N)
+y = np.random.rand(N)
+z = np.random.rand(N)
+# 绘制 x, y, z，并获取 Axes 实例
+circles, triangles, dots = ax.plot(x, 'ro’, y, 'g^’, z, 'b.’)
+ax.set_ylim(0, 1)
+# 去掉坐标轴
+plt.axis('off')
+
+# 动画需要有帧函数，定期执行
+# 这个函数将 data 的第一行作为圆圈的 y 值
+# 第二行作为三角的 y 值
+def update(data):
+    circles.set_ydata(data[0])
+    triangles.set_ydata(data[1])
+    return circles, triangles
+
+# 动画需要一个数据序列（可迭代对象）
+# 这是一个长度无限的生成器，每次迭代都返回 2xN 的随机值数组
+def generate():
+    while True: yield np.random.rand(2, N)
+
+# FuncAnimation 用于绘制对象
+# 参数一次是 Figure 实例，帧函数，数据序列，以及刷新间隔
+# 每次刷新时，都会用数据序列的当前值调用帧函数
+anim = animation.FuncAnimation(fig, update, generate, interval=150)
+plt.show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-f335836d81f87051.jpg)
