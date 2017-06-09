@@ -293,6 +293,18 @@ show()
 
 ![](http://upload-images.jianshu.io/upload_images/118142-8639b45349862ac2.jpg)
 
+注：
+
+`np.convolve`计算离散卷积，定义为：
+
+![](https://docs.scipy.org/doc/numpy/_images/math/7684e2e27ec39e9a8cdc8f40b7b668cfa06f8dd6.png)
+
+离散卷积其实就是系数数组的多项式乘法。例如计算`[1, 2, 0, 3]`和`[1, -2, 5]`的卷积：
+
+![](http://s10.sinaimg.cn/middle/455c7a60nb9668a49a719&690)
+
+结果为`[1, 1, 13, -6, 15]`。
+
 ## 指数滑动均值
 
 ```py
@@ -328,6 +340,64 @@ t = np.arange(N - 1, len(c))
 plot(t, c[N-1:], lw=1.0)
 plot(t, ema, lw=2.0)
 show()
+```
+
+## 使用线性模型预测收盘价
+
+```py
+import numpy as np
+import sys
+
+N = int(sys.argv[1])
+
+# 读入收盘价
+c = np.loadtxt('data.csv', delimiter=',', usecols=(6,), unpack=True)
+
+# 取后 N 天的收盘价，并倒序
+b = c[-N:]
+bbx = b[::-1]
+print "bbx", bbx
+# bbx [ 351.99  346.67  352.47  355.76  355.36]
+
+# 构建 NxN 的二维数组
+A = np.zeros((N, N), float)
+print "Zeros N by N", A
+'''
+A = np.zeros((N, N), float)
+print "Zeros N by N", A
+Zeros N by N [[ 0.  0.  0.  0.  0.]
+ [ 0.  0.  0.  0.  0.]
+ [ 0.  0.  0.  0.  0.]
+ [ 0.  0.  0.  0.  0.]
+ [ 0.  0.  0.  0.  0.]]
+'''
+
+# A[i] 是倒数第 i 天的前 N 天的收盘价
+for i in range(N):
+   A[i, ] = c[-N - 1 - i: - 1 - i]
+
+print "A", A
+'''
+A [[ 360.    355.36  355.76  352.47  346.67]
+ [ 359.56  360.    355.36  355.76  352.47]
+ [ 352.12  359.56  360.    355.36  355.76]
+ [ 349.31  352.12  359.56  360.    355.36]
+ [ 353.21  349.31  352.12  359.56  360.  ]]
+'''
+
+# 根据每一天前 N 天收盘价来预测当天收盘价
+# np.linalg.lstsq 是最小二乘法的多元线性回归
+# A 是输入属性的数据集，行是记录，列是属性
+# b 是输出属性的数组
+# x 是系数数组，x = (A^T A)^(-1) A^T b
+(x, residuals, rank, s) = np.linalg.lstsq(A, b)
+
+print x, residuals, rank, s
+# [ 0.78111069 -1.44411737  1.63563225 -0.89905126  0.92009049] [] 5 [  1.77736601e+03   1.49622969e+01   8.75528492e+00   5.15099261e+00   1.75199608e+00]
+
+# 通过后 N 天收盘价来预测下一天的收盘价
+print np.dot(b, x)
+# 357.939161015
 ```
 
 ## 剪切和压缩数组
