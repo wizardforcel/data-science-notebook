@@ -45,9 +45,9 @@ y1 = func1(x)
 
 # 将原函数绘制为红色的散点
 # 导函数绘制为绿色的虚线
-plt.plot(x, y, 'ro’, x, y1, 'g--’)
-plt.xlabel('x’)
-plt.ylabel('y’)
+plt.plot(x, y, 'ro', x, y1, 'g--')
+plt.xlabel('x')
+plt.ylabel('y')
 plt.show()
 # 可以看到这里导函数的零点是原函数的驻点
 ```
@@ -74,22 +74,22 @@ y2 = func2(x)
 # 三行一列的第一个位置
 plt.subplot(311)
 # 将原函数绘制为红色曲线
-plt.plot(x, y, 'r-’)
+plt.plot(x, y, 'r-')
 plt.title("Polynomial")
 
 # 三行一列的第二个位置
 plt.subplot(312)
 # 将一阶导函数绘制为蓝色三角
-plt.plot(x, y1, 'b^’)
+plt.plot(x, y1, 'b^')
 plt.title("First Derivative")
 
 # 三行一列的第三个位置
 plt.subplot(313)
 # 将一阶导函数绘制为绿色散点
-plt.plot(x, y2, 'go’)
+plt.plot(x, y2, 'go')
 plt.title("Second Derivative")
-plt.xlabel('x’)
-plt.ylabel('y’)
+plt.xlabel('x')
+plt.ylabel('y')
 plt.show()
 ```
 
@@ -114,7 +114,7 @@ alldays = DayLocator()
 months = MonthLocator()
 month_formatter = DateFormatter("%b %Y")
 
-symbol = 'DISH’
+symbol = 'DISH'
 
 if len(sys.argv) == 2:
    symbol = sys.argv[1]
@@ -152,7 +152,7 @@ import numpy as np
 today = date.today()
 start = (today.year - 1, today.month, today.day)
 
-symbol = 'DISH’
+symbol = 'DISH'
 
 if len(sys.argv) == 2:
    symbol = sys.argv[1]
@@ -188,7 +188,7 @@ import numpy as np
 today = date.today()
 start = (today.year - 1, today.month, today.day)
 
-symbol = 'DISH’
+symbol = 'DISH'
 
 if len(sys.argv) == 2:
    symbol = sys.argv[1]
@@ -231,7 +231,7 @@ import numpy as np
 today = date.today()
 start = (today.year - 1, today.month, today.day)
 
-symbol = 'DISH’
+symbol = 'DISH'
 
 if len(sys.argv) == 2:
    symbol = sys.argv[1]
@@ -251,7 +251,7 @@ ax = fig.add_subplot(111)
 # 横轴为收益，纵轴为成交量差值
 # 颜色随收益变化，大小随成交量变化
 ax.scatter(ret, volchange, c=ret * 100, s=volchange * 100, alpha=0.5)
-ax.set_title('Close and volume returns’)
+ax.set_title('Close and volume returns')
 ax.grid(True)
 
 plt.show()
@@ -274,7 +274,7 @@ import numpy as np
 today = date.today()
 start = (today.year - 1, today.month, today.day)
 
-symbol = 'DISH’
+symbol = 'DISH'
 
 if len(sys.argv) == 2:
    symbol = sys.argv[1]
@@ -312,6 +312,91 @@ plt.show()
 
 
 ## 使用图例和标注
+
+```py
+from matplotlib.finance import quotes_historical_yahoo
+from matplotlib.dates import DateFormatter
+from matplotlib.dates import DayLocator
+from matplotlib.dates import MonthLocator
+import sys
+from datetime import date
+import matplotlib.pyplot as plt
+import numpy as np
+
+today = date.today()
+start = (today.year - 1, today.month, today.day)
+
+symbol = 'DISH'
+
+if len(sys.argv) == 2:
+   symbol = sys.argv[1]
+
+# 读取 DISH 的日期和收盘价
+quotes = quotes_historical_yahoo(symbol, start, today)
+quotes = np.array(quotes)
+dates = quotes.T[0]
+close = quotes.T[4]
+
+# 获取 Figure 和 Axes 对象
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+emas = []
+
+# 计算窗口为 9、12、15 的指数滑动平均
+for i in range(9, 18, 3):
+   # 计算权重
+   weights = np.exp(np.linspace(-1., 0., i))
+   weights /= weights.sum()
+
+   # 计算滑动平均
+   ema = np.convolve(weights, close)[i-1:-i+1]
+   idx = (i - 6)/3
+   # 绘制滑动平均
+   # 我们使用 label 关键字参数来添加标签
+   ax.plot(dates[i-1:], ema, lw=idx, label="EMA(%s)" % (i))
+   data = np.column_stack((dates[i-1:], ema))
+   emas.append(np.rec.fromrecords(data, names=["dates", "ema"]))   
+
+# 寻找前两个滑动平均的交点
+first = emas[0]["ema"].flatten()
+second = emas[1]["ema"].flatten()
+bools = np.abs(first[-len(second):] - second)/second < 0.0001
+xpoints = np.compress(bools, emas[1])
+
+# 使用箭头来标注
+for xpoint in xpoints:
+   # annotate 函数用于标注
+   # 第一个参数：标注文本
+   # xy：被标注位置（箭头指向的点）
+   # xytext：文本位置（箭头起始的点）
+   # xycoords：xy 的坐标类型
+   # textcoords：xytext 的坐标类型
+   # arrowprops：箭头样式
+   ax.annotate('x', xy=xpoint, textcoords='offset points',
+                xytext=(-50, 30),
+                arrowprops=dict(arrowstyle="->"))
+   
+# 设置图例，loc='best' 让 Matplotlib 决定放在哪里
+leg = ax.legend(loc='best', fancybox=True)
+# 设置不透明度为 0.5
+leg.get_frame().set_alpha(0.5)
+
+# 设置日期 Locator 和 Formatter
+alldays = DayLocator()              
+months = MonthLocator()
+month_formatter = DateFormatter("%b %Y")
+# 绘制原始收盘价
+ax.plot(dates, close, lw=1.0, label="Close")
+ax.xaxis.set_major_locator(months)
+ax.xaxis.set_minor_locator(alldays)
+ax.xaxis.set_major_formatter(month_formatter)
+ax.grid(True)
+fig.autofmt_xdate()
+plt.show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-30976c357d8c1299.jpg)
 
 ## 三维绘图
 
@@ -381,7 +466,7 @@ x = np.random.rand(N)
 y = np.random.rand(N)
 z = np.random.rand(N)
 # 绘制 x, y, z，并获取 Axes 实例
-circles, triangles, dots = ax.plot(x, 'ro’, y, 'g^’, z, 'b.’)
+circles, triangles, dots = ax.plot(x, 'ro', y, 'g^', z, 'b.')
 ax.set_ylim(0, 1)
 # 去掉坐标轴
 plt.axis('off')
