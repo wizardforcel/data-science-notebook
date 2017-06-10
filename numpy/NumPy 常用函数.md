@@ -264,6 +264,9 @@ print "ATR", atr
 ## 简单滑动均值
 
 ```py
+# 每一天的简单滑动均值
+# 就是当天与前 (N - 1) 天的均值
+# 其中 N 是窗口大小
 import numpy as np
 import sys
 from matplotlib.pyplot import plot
@@ -285,6 +288,7 @@ c = np.loadtxt('data.csv', delimiter=',', usecols=(6,), unpack=True)
 sma = np.convolve(weights, c)[N-1:-N+1]
 
 # 绘制函数图像
+# 要注意横轴从 (N - 1) 开始
 t = np.arange(N - 1, len(c))
 plot(t, c[N-1:], lw=1.0)
 plot(t, sma, lw=2.0)
@@ -339,6 +343,74 @@ ema = np.convolve(weights, c)[N-1:-N+1]
 t = np.arange(N - 1, len(c))
 plot(t, c[N-1:], lw=1.0)
 plot(t, ema, lw=2.0)
+show()
+```
+
+## 布林带
+
+```py
+import numpy as np
+import sys
+from matplotlib.pyplot import plot
+from matplotlib.pyplot import show
+
+# 读取窗口大小
+N = int(sys.argv[1])
+
+# 这是简单滑动平均的权重
+weights = np.ones(N) / N
+print "Weights", weights
+
+# 读取收盘价
+c = np.loadtxt('data.csv', delimiter=',', usecols=(6,), unpack=True)
+# 计算简单滑动平均
+sma = np.convolve(weights, c)[N-1:-N+1]
+
+# 手动计算滑动标准差
+deviation = []
+C = len(c)
+
+for i in range(N - 1, C):
+    # 对于每一天
+    # 滑动标准差是当天与前 (N - 1) 天的标准差
+    # 和滑动均值类似，原书这里有误
+    dev = c[i - (N - 1): i + 1]
+    
+    averages = np.zeros(N)
+    # 这里的 fill 将数组元素全部变为指定值
+    # 相当于 averages.flat = sma[i - (N - 1)]
+    # 但是比它快
+    averages.fill(sma[i - (N - 1)])
+    # 也可以直接写 dev -= sma[i - (N - 1)]
+    dev = dev - averages 
+    dev = dev ** 2
+    dev = np.sqrt(np.mean(dev))
+    deviation.append(dev)
+
+deviation = 2 * np.array(deviation)
+print len(deviation), len(sma)
+# 上布林带是简单滑动均值加上两倍滑动标准差
+# 下布林带是简单滑动均值减去两倍滑动标准差
+upperBB = sma + deviation
+lowerBB = sma - deviation
+
+c_slice = c[N-1:]
+between_bands = np.where((c_slice < upperBB) & (c_slice > lowerBB))
+
+print lowerBB[between_bands]
+print c[between_bands]
+print upperBB[between_bands]
+between_bands = len(np.ravel(between_bands))
+print "Ratio between bands", float(between_bands)/len(c_slice)
+
+# 绘制收盘价、简单滑动均值
+# 上布林带和下布林带的图像
+# 要注意横轴从 N - 1 开始
+t = np.arange(N - 1, C)
+plot(t, c_slice, lw=1.0)
+plot(t, sma, lw=2.0)
+plot(t, upperBB, lw=3.0)
+plot(t, lowerBB, lw=4.0)
 show()
 ```
 
