@@ -1,4 +1,4 @@
-# 掌握 NumPy 常用函数
+# 掌握 NumPy 常用函数 II
 
 ## 斐波那契数的第 n 项
 
@@ -298,6 +298,7 @@ plt.show()
 ## 收益的分布
 
 ```py
+# 来源：NumPy Cookbook 2e Ch3.6
 from __future__ import print_function 
 from matplotlib.finance 
 import quotes_historical_yahoo 
@@ -354,6 +355,7 @@ plt.show()
 ## 模拟随机交易
 
 ```py
+# 来源：NumPy Cookbook 2e Ch3.7
 from __future__ import print_function 
 from matplotlib.finance import quotes_historical_yahoo 
 from datetime import date 
@@ -400,6 +402,7 @@ plt.show()
 ## 埃拉托色尼筛选法
 
 ```py
+# 来源：NumPy Cookbook 2e Ch3.8
 # 埃拉托色尼筛选法是筛选质数的算法
 # 它迭代地判断倍数来寻找质数
 # 根据定义，倍数不是质数，可以忽略
