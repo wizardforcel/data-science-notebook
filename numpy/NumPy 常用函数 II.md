@@ -294,3 +294,142 @@ plt.show()
 ```
 
 ![](http://upload-images.jianshu.io/upload_images/118142-61e5d13078d09d32.jpg)
+
+## 收益的分布
+
+```py
+from __future__ import print_function 
+from matplotlib.finance 
+import quotes_historical_yahoo 
+from datetime import date 
+import numpy as np 
+import scipy.stats 
+import matplotlib.pyplot as plt
+
+#1. 获取 AAPL 一年内的收盘价
+today = date.today() 
+start = (today.year - 1, today.month, today.day)
+
+quotes = quotes_historical_yahoo('AAPL', start, today) 
+close =  np.array([q[4] for q in quotes])
+
+#2. 计算对数收益
+logreturns = np.diff(np.log(close))
+
+#3. 计算 breakout 和 pullback
+# 我们每 50 天交易一次，所以频率是 0.02
+# 我们的策略是低于一定百分比时买入
+# 高于一定百分比时卖出
+# scoreatpercentile 寻找百分位点
+freq = 0.02 
+breakout = scipy.stats.scoreatpercentile(logreturns, 100 * (1 - freq) ) 
+pullback = scipy.stats.scoreatpercentile(logreturns, 100 * freq)
+
+#4. 生成买入和卖出
+# compress(idx, arr) 相当于 arr[idx]
+buys = np.compress(logreturns < pullback, close) 
+sells = np.compress(logreturns > breakout, close) 
+print(buys) 
+# [  77.76375466   76.69249773  102.72        101.2          98.57      ] 
+print(sells) 
+# [ 74.95502967  76.55980292  74.13759123  80.93512599  98.22      ] 
+print(len(buys), len(sells)) 
+# 5 5 
+print(sells.sum() - buys.sum())
+# -52.1387025726 
+
+#5. 绘制对数收益的直方图
+# 直接传入数据调用 hist 就可以
+# 横轴是收益值，纵轴是频数
+plt.title('Periodic Trading') 
+plt.hist(logreturns) 
+plt.grid() 
+plt.xlabel('Log Returns') 
+plt.ylabel('Counts') 
+plt.show() 
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-028c1f3733a83b81.jpg)
+
+## 模拟随机交易
+
+```py
+from __future__ import print_function 
+from matplotlib.finance import quotes_historical_yahoo 
+from datetime import date 
+import numpy as np 
+import matplotlib.pyplot as plt
+
+def get_indices(high, size):
+    #2. 获取 size 个 0 ~ high 之间的随机整数
+    return np.random.randint(0, high, size)
+
+#1. 获取 AAPL 一年的收盘价
+today = date.today() 
+start = (today.year - 1, today.month, today.day)
+quotes = quotes_historical_yahoo('AAPL', start, today) 
+close =  np.array([q[4] for q in quotes])
+
+# 模拟 2000 次
+# 每次模拟中，买入 5 次，卖出 5 次
+nbuys = 5 
+N = 2000 
+profits = np.zeros(N)
+
+for i in xrange(N):   
+    #3. 模拟交易
+    # np.take(arr, idx) 相当于 arr[idx]
+    buys = np.take(close, get_indices(len(close), nbuys))   
+    sells = np.take(close, get_indices(len(close), nbuys))   
+    profits[i] = sells.sum() - buys.sum()
+
+print("Mean", profits.mean()) 
+print("Std", profits.std())
+
+#4. 绘制利润的直方图 
+plt.title('Simulation') 
+plt.hist(profits) 
+plt.xlabel('Profits') 
+plt.ylabel('Counts') 
+plt.grid() 
+plt.show() 
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-97d63ca910ffa107.jpg)
+
+## 埃拉托色尼筛选法
+
+```py
+# 埃拉托色尼筛选法是筛选质数的算法
+# 它迭代地判断倍数来寻找质数
+# 根据定义，倍数不是质数，可以忽略
+from __future__ import print_function 
+import numpy as np
+
+LIM = 10 ** 6 
+N = 10 ** 9 
+P = 10001 
+primes = [] 
+p = 2
+
+# 前六个质数为 2, 3, 5, 7, 11, 13，第六个是 13
+# 那么第 10001 个呢？
+def sieve_primes(a, p):
+    #2. 过滤掉 p 的倍数   
+    a = a[a % p != 0]
+    return a
+
+#1. 原理是创建以 3 开始的连续奇数数组
+# （因为除了 2 的偶数都是合数）
+# 每次取第一个元素，并过滤掉它的倍数
+# 就能够得到质数数组
+for i in xrange(3, N, LIM):
+    a = np.arange(i, i + LIM, 2)
+    
+    while len(primes) < P:  
+        a = sieve_primes(a, p)
+        primes.append(p)
+        p = a[0]
+
+print(len(primes), primes[P-1])
+```
