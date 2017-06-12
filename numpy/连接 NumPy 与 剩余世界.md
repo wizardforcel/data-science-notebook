@@ -85,5 +85,10 @@ array =
   1
   ...
   6
+'''
+
+# 还可以再读取进来
+mat = io.loadmat("a.mat")
+print mat
+{'array': array([[0, 1, 2, 3, 4, 5, 6]]), '__version__': '1.0', '__header__': 'MATLAB 5.0 MAT-file Platform: nt, Created on: Sun Jun 11 18:48:29 2017', '__globals__': []}
 ```
-  
