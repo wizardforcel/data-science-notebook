@@ -142,3 +142,145 @@ plt.show()
 ```
 
 ![]()
+
+## 重复声音片段
+
+```py
+import scipy.io.wavfile 
+import matplotlib.pyplot as plt 
+import urllib2 
+import numpy as np
+
+# 下载音频文件
+response = urllib2.urlopen('http://www.thesoundarchive.com/ austinpowers/smashingbaby.wav') 
+print(response.info()) 
+
+# 将文件写到磁盘
+WAV_FILE = 'smashingbaby.wav' 
+filehandle = open(WAV_FILE, 'w') 
+filehandle.write(response.read()) 
+filehandle.close() 
+
+# 使用 SciPy 读取音频文件
+sample_rate, data = scipy.io.wavfile.read(WAV_FILE) 
+print("Data type", data.dtype, "Shape", data.shape)
+# ('Data type', dtype('uint8'), 'Shape', (43584L,))
+
+# 绘制原始音频文件
+plt.subplot(2, 1, 1)
+plt.title("Original") 
+plt.plot(data)
+
+# 绘制重复后的音频文件
+plt.subplot(2, 1, 2)
+# tile 用于重复数组
+repeated = np.tile(data, 3)
+plt.title("Repeated") 
+plt.plot(repeated) 
+
+# 保存重复后的音频文件
+scipy.io.wavfile.write("repeated_yababy.wav", sample_rate, repeated)
+plt.show()
+```
+
+![]()
+
+## 生成声音
+
+```py
+# 声音可以表示为某个振幅、频率和初相的正弦波
+# 如果我们把钢琴上的键编为 1 ~ 88，
+# 那么它的频率就是 440 * 2 ** ((n - 49) / 12)
+# 其中 n 是键的编号
+
+import scipy.io.wavfile 
+import numpy as np
+import matplotlib.pyplot as plt
+
+RATE = 44100 
+DTYPE = np.int16
+
+# 生成正弦波 
+def generate(freq, amp, duration, phi): 
+    t = np.linspace(0, duration, duration * RATE) 
+    data = np.sin(2 * np.pi * freq * t + phi) * amp
+    
+    return data.astype(DTYPE)
+
+# 初始化
+# 弹奏 89 个音符
+NTONES = 89 
+# 振幅是 200 ~ 2000
+amps = 2000. * np.random.random((NTONES,)) + 200. 
+# 时长是 0.01 ~ 0.2
+durations = 0.19 * np.random.random((NTONES,)) + 0.01 
+# 键从 88 个中任取
+keys = np.random.random_integers(1, 88, NTONES) 
+# 频率使用上面的公式生成
+freqs = 440.0 * 2 ** ((keys - 49.)/12.) 
+# 初相是 0 ~ 2 * pi
+phi = 2 * np.pi * np.random.random((NTONES,))
+
+tone = np.array([], dtype=DTYPE)
+
+for i in xrange(NTONES):   
+    # 对于每个音符生成正弦波
+    newtone = generate(freqs[i], amp=amps[i],  duration=durations[i], phi=phi[i])   
+    # 附加到音频后面
+    tone = np.concatenate((tone, newtone))
+
+# 保存文件
+scipy.io.wavfile.write('generated_tone.wav', RATE, tone)
+
+# 绘制音频数据
+plt.plot(np.linspace(0, len(tone)/RATE, len(tone)), tone) 
+plt.show()
+```
+
+## 设计音频滤波器
+
+```py
+import scipy.io.wavfile 
+import matplotlib.pyplot as plt 
+import urllib2 
+import numpy as np
+
+# 下载音频文件
+response = urllib2.urlopen('http://www.thesoundarchive.com/ austinpowers/smashingbaby.wav') 
+print(response.info()) 
+
+# 将文件写到磁盘
+WAV_FILE = 'smashingbaby.wav' 
+filehandle = open(WAV_FILE, 'w') 
+filehandle.write(response.read()) 
+filehandle.close() 
+
+# 使用 SciPy 读取音频文件
+sample_rate, data = scipy.io.wavfile.read(WAV_FILE) 
+print("Data type", data.dtype, "Shape", data.shape)
+# ('Data type', dtype('uint8'), 'Shape', (43584L,))
+
+# 绘制原始音频文件
+plt.subplot(2, 1, 1)
+plt.title("Original") 
+plt.plot(data)
+
+# 设计滤波器，iirdesign 设计无限脉冲响应滤波器
+# 参数依次是 0 ~ 1 的正则化频率、
+# 最大损失、最低衰减和滤波类型
+b,a = scipy.signal.iirdesign(wp=0.2, ws=0.1, gstop=60, gpass=1, ftype='butter')
+
+# 传入刚才的返回值，使用 lfilter 函数来调用滤波器
+filtered = scipy.signal.lfilter(b, a, data)
+
+# 绘制滤波后的音频
+plt.subplot(2, 1, 2) 
+plt.title("Filtered") 
+plt.plot(filtered)
+
+# 保存滤波后的音频
+scipy.io.wavfile.write('filtered.wav', sample_rate, filtered. astype(data.dtype))
+plt.show()
+```
+
+![]()
