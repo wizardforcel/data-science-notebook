@@ -53,7 +53,7 @@ plt.axis('off')
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-7152447e38a2a612.jpg)
 
 ## 组合图像
 
@@ -99,7 +99,7 @@ plt.title('Mandelbrot + Lena')
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-fcdbc2f0492ff48d.jpg)
 
 ## 使图像变模糊
 
@@ -141,7 +141,7 @@ plt.axis('off')
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-ce0aaa349b8afaa4.jpg)
 
 ## 重复声音片段
 
@@ -183,7 +183,7 @@ scipy.io.wavfile.write("repeated_yababy.wav", sample_rate, repeated)
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-748e3058f39b2c99.jpg)
 
 ## 生成声音
 
@@ -237,6 +237,8 @@ plt.plot(np.linspace(0, len(tone)/RATE, len(tone)), tone)
 plt.show()
 ```
 
+![](http://upload-images.jianshu.io/upload_images/118142-0215a4487bf6334a.jpg)
+
 ## 设计音频滤波器
 
 ```py
@@ -283,4 +285,48 @@ scipy.io.wavfile.write('filtered.wav', sample_rate, filtered. astype(data.dtype)
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-c0189c577e1a4fd2.jpg)
+
+## Sobel 过滤器的边界检测
+
+```py
+# Sobel 过滤器用于提取图像的边界
+# 也就是将图像转换成线框图风格
+import scipy 
+import scipy.ndimage 
+import matplotlib.pyplot as plt
+
+# 导入 Lena
+lena = scipy.misc.lena()
+
+# 绘制 Lena（左上方）
+plt.subplot(221) 
+plt.imshow(lena) 
+plt.title('Original') 
+plt.axis('off')
+
+
+# Sobel X 过滤器过滤后的图像（右上方）
+sobelx = scipy.ndimage.sobel(lena, axis=0, mode='constant')
+plt.subplot(222) 
+plt.imshow(sobelx) 
+plt.title('Sobel X') 
+plt.axis('off')
+
+# Sobel Y 过滤器过滤的图像（左下方） 
+sobely = scipy.ndimage.sobel(lena, axis=1, mode='constant')
+plt.subplot(223) 
+plt.imshow(sobely) 
+plt.title('Sobel Y') 
+plt.axis('off')
+
+# 默认的 Sobel 过滤器（右下方）
+default = scipy.ndimage.sobel(lena)
+plt.subplot(224) 
+plt.imshow(default) 
+plt.title('Default Filter') 
+plt.axis('off')
+plt.show()
+```
+
+![](http://upload-images.jianshu.io/upload_images/118142-f55257784f528d32.jpg)
