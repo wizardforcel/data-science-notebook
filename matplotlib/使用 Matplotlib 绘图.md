@@ -412,10 +412,13 @@ fig = plt.figure()
 # 获取 Axes 实例，projection='3d' 表示三维绘图
 ax = fig.add_subplot(111, projection='3d')
 
+# x 和 y 从 -1 到 1 取 100 个点
 u = np.linspace(-1, 1, 100)
 
-# x 和 y 从 -1 到 1 取 100 个点
-# meshgrid 创建二维的网格，包含每一组 x, y
+# meshgrid 创建二维的网格
+# 接受一维数组 x，长为 m，数组y，长为 n
+# 生成 nxm 矩阵 A 和 B，A[i, j] == x[j]
+# B[i, j] == y[i]
 x, y = np.meshgrid(u, u)
 z = x ** 2 + y ** 2
 # plot_surface 用于绘制曲面
