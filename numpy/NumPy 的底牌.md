@@ -87,10 +87,11 @@ plt.legend(loc='best')
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-903a8f2a3fb2f7e5.jpg)
 
 ## datetime64 类型
 
+```
 import numpy as np
 
 # 由年月日构造

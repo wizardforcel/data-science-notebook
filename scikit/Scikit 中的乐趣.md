@@ -175,7 +175,7 @@ plt.plot(x, y, 'ro')
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-8c87fd077140e735.jpg)
 
 ## 边界检测
 
@@ -199,4 +199,4 @@ plt.imshow(edges)
 plt.show()
 ```
 
-![]()
+![](http://upload-images.jianshu.io/upload_images/118142-68074e332e2495c6.jpg)
