@@ -237,4 +237,131 @@ array([[ 0.,  0.0384,  0.6834]
 '''
 
 # 复矩阵的分解
+y = np.array([[1, 2j],[-3j, 4]]) 
+np.linalg.eig(y) 
+'''
+(array([ -0.3723+0.j,  5.3723+0.j]), 
+ array([[0.8246+0.j    ,  0.0000+0.416j     ], 
+        [-0.0000+0.5658j,  0.9094+0.j    ]])) 
+'''
+
+# 可能存在舍入错误
+# 这里的特征值应该是 1 +/- 1e-10
+z = np.array([[1 + 1e-10, -1e-10],[1e-10, 1 - 1e-10]]) 
+np.linalg.eig(z) 
+'''
+(array([ 1.,  1.]), array([[0.70710678,  0.707106], 
+        [0.70710678,  0.70710757]])) 
+'''
+
+# 奇异值分解可以看做特征值分解的扩展
+# 可用于非方阵
+np.set_printoptions(precision = 4) 
+A = np.array([3,1,4,1,5,9,2,6,5]).reshape(3,3) 
+# 如果 A 是 mxn 矩阵
+# u 是 mxm 矩阵，列向量为左奇异向量，也就是 A A^T 的特征向量
+# sigma 是 min(m,n) 个奇异值=的数组，奇异值是 A A^T 和 A^T A 的特征值平方根
+# v 是 nxn 矩阵，列向量为右奇异向量，也就是 A^T A 的特征向量
+u, sigma, vh = np.linalg.svd(A) 
+u 
+'''
+array([[-0.3246,  0.799 ,  0.5062], 
+       [-0.7531,  0.1055, -0.6494], 
+       [-0.5723, -0.592 ,  0.5675]]) 
+'''
+vh 
+'''
+array([[-0.2114, -0.5539, -0.8053], 
+       [ 0.4633, -0.7822,  0.4164], 
+       [ 0.8606,  0.2851, -0.422 ]]) 
+'''
+sigma 
+# array([ 13.5824,   2.8455,   2.3287]) 
+
+# 如果设置了 full_matrices=False
+# u 是 mxmin(m,n) 阶矩阵
+# v 是 min(m,n)xn 阶矩阵
+# 就能将其乘起来
+u, sigma, vh = np.linalg.svd(A, full_matrices=False) 
+u * np.diag(s) * v
+'''
+array([[3, 1, 4],
+       [1, 5, 9],
+       [2, 6, 5]])
+'''
+
+# QR 分解
+# Ax = b, x = A^(-1) b
+# A = QR
+# x = R^(-1) Q^(-1) b
+#   = R^(-1) Q.T b
+b = np.array([1,2,3]).reshape(3,1) 
+q, r = np.linalg.qr(A) 
+x = np.dot(np.linalg.inv(r), np.dot(q.T, b)) 
+x 
+'''
+array([[ 0.2667], 
+       [ 0.4667], 
+       [-0.0667]]) 
+'''
+```
+
+## 多项式
+
+```py
+# root 表示多项式的根为 1,2,3,4
+root = np.array([1,2,3,4]) 
+# poly 把根转化成系数数组
+# 高次项在前
+np.poly(root) 
+# array([  1, -10,  35, -50,  24]) 
+# 也就是 x ** 4 - 10 * x ** 3 + 35 * x ** 2 - 50 * x + 24
+
+# roots 求多项式的根
+np.roots([1,-10,35,-50,24]) 
+# array([ 4.,  3.,  2.,  1.]) 
+
+# polyval 计算多项式的值
+# 接受多项式系数和 x 值
+np.polyval([1,-10,35,-50,24], 5) 
+# 24 
+
+coef = np.array([1,-10,35,-50,24])
+# polyint 求多项式函数的不定积分
+# ∫(x ** n)dx = x ** (n + 1) / (n + 1) + C
+# ∫(u + v)dx = ∫udx + ∫vdx
+# 这里的常数项 C 一律为 0
+integral = np.polyint(coef)  
+integral
+# array([  0.2 ,  -2.5 ,  11.6667, -25.  ,  24.  ,  0.  ]) 
+
+# polyder 对多项式求导
+# (x ** n)' = n * x ** (n - 1)
+# (u + v)' + u' + v'
+np.polyder(integral) == coef
+# array([ True,  True,  True,  True,  True], dtype=bool) 
+# 还可以直接算五阶导数
+np.polyder(coef, 5)
+# array([], dtype=int32) 
+
+# 构造 Polynomial 对象
+from numpy.polynomial import polynomial 
+p = polynomial.Polynomial(coef) 
+p 
+# Polynomial([  1., -10.,  35., -50.,  24.], [-1,  1], [-1,  1]) 
+# 取系数
+p.coef 
+# array([  1., -10.,  35., -50.,  24.]) 
+# 取根
+p.roots() 
+# array([ 0.25  ,  0.3333,  0.5   ,  1.    ]) 
+# 求函数值
+polynomial.polyval(p, 5) 
+# Polynomial([ 5.], [-1.,  1.], [-1.,  1.]) 
+# 积分
+p.integ() 
+Polynomial([  0.    ,   1.    ,  -5.    ,  11.6667, -12.5   ,   4.8   ], [-1.,  1.], [-1.,  1.]) 
+# 微分
+p.integ().deriv() == p 
+# True 
 ```

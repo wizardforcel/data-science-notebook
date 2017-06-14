@@ -126,10 +126,12 @@ Right [[ 0.70710678]
 
 ```py
 # 奇异值是 A * A.T 特征值的算术平方根
-# 若 A 是 mxn 阶矩阵
+# 若 A 是 mxmin(m,n) 阶矩阵
 # 奇异值分解将 A 分解成 USV
-# U 是 mxm 阶。S 是 mxm 阶对角矩阵，由奇异值构成
-# V 是 mxn 阶
+# U 是 mxm 矩阵。S 是 min(m,n) 阶对角矩阵，由奇异值构成
+# V 是 min(m,n)xn 阶
+# 如果不设置 full_matrices=False
+# U 是 mxm 阶，V 是 nxn 阶
 
 import numpy as np
 
