@@ -148,3 +148,55 @@ print(normal_ad(np.diff(np.log(close))))
 # (0.57103805516803163, 0.13725944999430437)
 # p-value，也就是概率为 0.13
 ```
+
+## 角点检测
+
+```py
+
+from skimage.feature import corner_peaks 
+from skimage.color import rgb2gray
+
+# 加载示例图片（亭子那张）
+dataset = load_sample_images() 
+img = dataset.images[0] 
+
+# 将 RGB 图像转成灰度
+gray_img = rgb2gray(img) 
+
+# 使用 Harris 角点检测器
+# http://en.wikipedia.org/wiki/Corner_detection
+harris_coords = corner_peaks(corner_harris(gray_img))
+# harris_coords 第一列是 y，第二列是 x
+y, x = np.transpose(harris_coords) 
+plt.axis('off') 
+# 绘制图像和角点
+plt.imshow(img) 
+plt.plot(x, y, 'ro') 
+plt.show()
+```
+
+![]()
+
+## 边界检测
+
+```py
+from sklearn.datasets import load_sample_images 
+import matplotlib.pyplot as plt 
+import skimage.feature
+
+# 加载示例图片（亭子那张）
+dataset = load_sample_images() 
+img = dataset.images[0] 
+
+# 使用 Canny 过滤器检测边界
+# 基于高斯分布的标准差
+# http://en.wikipedia.org/wiki/Edge_detection
+edges = skimage.feature.canny(img[..., 0]) 
+
+# 绘制图像
+plt.axis('off') 
+plt.imshow(edges) 
+plt.show()
+```
+
+![]()
