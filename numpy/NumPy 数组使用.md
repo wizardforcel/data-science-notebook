@@ -1,0 +1,266 @@
+# NumPy 数组使用
+
+```py
+# 来源：NumPy Essentials ch3
+```
+
+## 向量化
+
+```py
+import numpy as np 
+
+# NumPy 数组的运算是向量化的
+
+# 数组和标量运算是每个元素和标量运算
+x = np.array([1, 2, 3, 4]) 
+x + 1 
+# array([2, 3, 4, 5]) 
+
+# 数组和数组运算是逐元素运算
+y = np.array([-1, 2, 3, 0]) 
+x * y 
+array([-1,  4,  9,  0]) 
+
+# 需要计算内积的时候
+# 使用np.dot
+np.dot(x, y) 
+# 12
+
+# 所有逻辑运算符也是向量化的
+x == y 
+# array([False,  True,  True, False], dtype=bool) 
+
+# NumPy 使用 C 语言编译出来的代码来处理数据
+# 所以很快
+x = np.arange(10000)
+'''
+%timeit x + 1
+100000 loops, best of 3: 12.6 µs per loop 
+'''
+y = range(10000)
+'''
+%timeit [i + 1 for i in y] 
+1000 loops, best of 3: 458 µs per loop 
+'''
+
+x = np.arange(1,9) 
+x.dtype 
+# dtype('int32') 
+
+# 整数和浮点的 div 运算生成浮点
+x = x / 10.0 
+x 
+# array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8]) 
+x.dtype 
+# dtype('float64') 
+
+# 整数和浮点的 idiv 运算
+# 1.10 版之前生成整数
+# 之后会报错
+y = np.arange(1,9) 
+y /= 10.0 
+y 
+# array([0, 0, 0, 0, 0, 0, 0, 0]) 
+y.dtype 
+# dtype('int32')
+```
+
+## 通用函数（ufunc）
+
+```py
+
+# 通用函数在数组的每个元素上调用
+# 也可以处理标量
+x = np.arange(5,10) 
+np.square(x) 
+# array([25, 36, 49, 64, 81]) 
+
+# 也有二元的通用函数
+y = np.ones(5) * 10 
+np.mod(y, x) 
+# array([ 0.,  4.,  3.,  2.,  1.]) 
+
+# 一些函数名称类似
+# 但是效果不一样
+# np.minimum 逐元素计算较小值
+# 属于通用函数
+# np.fmin 与之相同
+np.minimum(x, 7)
+# array([5, 6, 7, 7, 7]) 
+
+# np.min 计算整个数组的最小值
+# 属于聚集函数
+np.min(x) 
+# 5
+
+z = np.repeat(x, 3).reshape(5, 3) 
+z 
+'''
+array([[5, 5, 5], 
+       [6, 6, 6], 
+       [7, 7, 7], 
+       [8, 8, 8], 
+       [9, 9, 9]]) 
+'''
+# 聚集函数一般会有 axis 参数
+# 指定沿着哪个轴
+# 如果不写，则是全数组聚集
+np.median(z) 
+# 7.0 
+
+# 轴 0 是沿 arr[0], arr[1] 方向的轴
+# 对于二维数据来说，就是列方向
+np.median(z, axis = 0) 
+# array([ 7.,  7.,  7.]) 
+
+# 轴 1 是沿 arr[0][0], arr[0][1] 方向的轴
+# 对于二维数据来说，就是行方向
+np.median(z, axis = 1) 
+# array([ 5.,  6.,  7.,  8.,  9.]) 
+
+# accumulate 计算累计
+# accum[i] = arr[0] op ... op arr[i]
+np.add.accumulate(x) 
+array([ 5, 11, 18, 26, 35]) 
+
+
+# outer 计算外积
+# 返回矩阵，每个元素是 a[i] op b[j]
+np.multiply.outer(x, x) 
+'''
+array([[25, 30, 35, 40, 45], 
+       [30, 36, 42, 48, 54], 
+       [35, 42, 49, 56, 63], 
+       [40, 48, 56, 64, 72], 
+       [45, 54, 63, 72, 81]]) 
+'''
+
+## 广播和调整形状
+
+```py
+# 最简单的就是通过 shape 属性调整形状
+# 形状乘起来要等于元素个数
+# -1 表示由 NumPy 来计算，这里计算结果是 4
+x = np.arange(24) 
+x.shape = 2, 3, -1 
+x 
+'''
+array([[[ 0,  1,  2,  3], 
+        [ 4,  5,  6,  7], 
+        [ 8,  9, 10, 11]], 
+       [[12, 13, 14, 15], 
+        [16, 17, 18, 19], 
+        [20, 21, 22, 23]]]) 
+'''
+
+# 也可以使用 reshape 生成指定形状的视图
+# 或者 resize 生成指定形状的副本
+# 而不会改动 x
+y = x.reshape((2, 3, -1))
+
+# flatten 创造展开后的副本
+# ravel 创造展开后的视图
+x = np.arange(1000000) 
+x.shape = 100, 100, 100 
+'''
+%timeit x.flatten() 
+1000 loops, best of 3: 1.14 ms per loop 
+%timeit x.ravel() 
+1000000 loops, best of 3: 330 ns per loop 
+'''
+```
+
+## 向量堆叠
+
+```py
+x = np.arange (0, 10, 2) 
+y = np.arange (0, -5, -1)
+
+# vstack 是竖直堆叠，也就是沿倒数第二个轴堆叠
+# 一维数组只有一个轴，所以会新增一个维度
+# 结果会创建一维数组的数组
+np.vstack([x, y]) 
+'''
+array([[ 0,  2,  4,  6,  8], 
+       [ 0, -1, -2, -3, -4]]) 
+'''
+
+# hstack 是数值堆叠，也就是沿倒数第一个轴堆叠
+# 对于一维数组是首尾拼接
+np.hstack([x, y])
+# array([ 0,  2,  4,  6,  8,  0, -1, -2, -3, -4]) 
+
+# dstack 是纵深堆叠
+# 所以结果是三维数组
+np.dstack([x, y]) 
+'''
+array([[[ 0,  0], 
+        [ 2, -1], 
+        [ 4, -2], 
+        [ 6, -3], 
+        [ 8, -4]]]) 
+'''
+```
+
+## 布尔索引
+
+```py
+
+# 布尔数组可通过数组的逻辑运算来获取
+x = np.array([1,3,-1, 5, 7, -1])
+mask = (x < 0) 
+mask 
+# array([False, False,  True, False, False,  True], dtype=bool) 
+
+# NumPy 可接受布尔数组作为索引
+# 布尔数组的形状需要与原数组一致
+# True 元素表示取该值，False 表示不取
+# 结果是一维数组
+x [mask] = 0
+x
+# array([1, 3, 0, 5, 7, 0]) 
+
+# 布尔数组可以使用 sum 方法来统计 True 的个数
+# 原理是调用 sum 时会将 False 转换成 0
+# True 转换成 1
+x = np.random.random(50)
+(x > .5).sum()
+# 20 
+```
+
+## 助手函数
+
+```py
+
+# lookfor 用于搜索包含指定单词的函数
+np.lookfor('resize')
+'''
+Search results for 'resize' 
+--------------------------- 
+numpy.ma.resize 
+    Return a new masked array with the specified size and shape. 
+numpy.chararray.resize 
+    Change shape and size of array in-place. 
+numpy.oldnumeric.ma.resize 
+    The original array's total size can be any size. 
+numpy.resize 
+    Return a new array with the specified shape. 
+'''
+
+# 每个函数或方法的文档字符串中
+# 都包含它的 API 文档
+print np.arange.__doc__
+'''
+arange([start,] stop[, step,], dtype=None)
+
+    Return evenly spaced values within a given interval.
+
+    Values are generated within the half-open interval ``[start, stop)``
+    (in other words, the interval including `start` but excluding `stop`).
+    For integer arguments the function is equivalent to the Python built-in
+    `range <http://docs.python.org/lib/built-in-funcs.html>`_ function,
+    but returns an ndarray rather than a list.
+    
+...
+'''
+```
