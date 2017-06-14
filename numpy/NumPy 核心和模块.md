@@ -1,0 +1,305 @@
+# NumPy 核心和模块
+
+```py
+# 来源：NumPy Essentials ch4
+```
+
+## 步长
+
+```py
+
+# 步长是每个维度相邻两个元素的偏移差值
+import numpy as np
+
+x = np.arange(8, dtype = np.int8)
+x
+# array([0, 1, 2, 3, 4, 5, 6, 7])
+# x 是一维数组，步长为 1，因为 int8 占一个字节
+x.strides
+# (1,)
+# data 属性可以观察原始数据
+str(x.data)
+# '\x00\x01\x02\x03\x04\x05\x06\x07'
+
+# 将 x 转换为 2x4 的二维数组
+x.shape = 2, 4 
+x
+'''
+array([[0, 1, 2, 3], 
+       [4, 5, 6, 7]], dtype=int8) 
+'''
+# 第二维的步长是 1，等于类型大小
+# 第一维的步长是 4，等于第二位步长乘以第二维的长度
+x.strides
+# (4, 1)
+# 原始数据还是不变
+str(x.data) 
+# '\x00\x01\x02\x03\x04\x05\x06\x07' 
+
+# 转换为 1x4x2 的三位数组
+x.shape = 1,4,2
+# 第三维的步长是 1，等于类型大小
+# 第二维的步长是 2，等于第三维步长乘以第三维的长度
+# 第一维的步长是 8，等于第二维步长乘以第二维的长度
+x.strides 
+# (8, 2, 1)
+str(x.data)
+# '\x00\x01\x02\x03\x04\x05\x06\x07' 
+
+'''
+对于连续数组（flags 中为连续）：
+strides[ndim - 1] = itemsize
+strides[i] = strides[i + 1] * shape[i + 1]
+
+def calc_strides(shape, itemsize):
+    ndim = len(shape)
+    strides = [0] * ndim
+    strides[-1] = itemsize
+    for i in xrange(ndim - 2, -1, -1):
+        strides[i] = strides[i + 1] * shape[i + 1]
+    return strides
+'''
+
+# 再来看看不连续数组
+# 这里 x 是连续的，y 是不连续的
+x = np.ones((10000,)) 
+y = np.ones((10000 * 100, ))[::100] 
+# 它们的形状一样，都是 10000 大小的一维数组
+x.shape, y.shape 
+# ((10000,), (10000,))
+# 值也一样 
+x == y 
+# array([ True,  True,  True, ...,  True,  True, True], dtype=bool) 
+
+# 查看它们的标识
+x.flags 
+'''
+C_CONTIGUOUS : True 
+F_CONTIGUOUS : True 
+OWNDATA : True 
+WRITEABLE : True 
+ALIGNED : True 
+UPDATEIFCOPY : False 
+
+由于 x 是一维数组，所以行和列都连续
+'''
+y.flags 
+'''
+C_CONTIGUOUS : False 
+F_CONTIGUOUS : False 
+OWNDATA : False 
+WRITEABLE : True 
+ALIGNED : True 
+UPDATEIFCOPY : False 
+
+y 是由切片产生的，所以行和列都不连续
+并且没有自己的数据
+'''
+
+# 它们的步长是不一样的
+# 某个维度在切片时提供了步长
+# 数组的步长也会乘这个数
+x.strides, y.strides 
+# ((8,), (800,)) 
+
+'''
+不连续数组由于不是缓存友好的
+访问也较慢
+
+%timeit x.sum() 
+100000 loops, best of 3: 13.8 µs per loop 
+%timeit y.sum() 
+10000 loops, best of 3: 25.9 µs per loop 
+```
+
+## 结构化数组
+
+```py
+# 结构化数组也叫作记录数组
+# 它的元素是一条记录
+
+# 要创建这种数组，我们需要使用数组来表示数据，每个元素是一个元组，表示记录
+# 然后我们需要指定类型，使用数组来表示，每个元素是个二元组
+# 字段用二元组表示，第一项是名称，第二项是类型
+x = np.array([(1, 0.5, 'NumPy'), (10, -0.5, 'Essential')], 
+      dtype=[('f0', '<i4'), ('f1', '<f4'), ('f2', 'S10')]) 
+
+# 位置下标得到的是元组（记录）
+x[0] 
+# (1, 0.5, 'NumPy') 
+# 还可以通过字段名称访问
+# 得到的是字段值的数组
+x['f2'] 
+# array(['NumPy', 'Essential'], dtype='|S10') 
+
+# 字段值的数据还是视图
+# 修改它会修改原始数组
+y = x['f0'] 
+y 
+# array([ 1, 10]) 
+y[:] = y * 10 
+y 
+# array([ 10, 100]) 
+y[:] = y + 0.5 
+y 
+# array([ 10, 100]) 
+x 
+'''
+array([(10, 0.5, 'NumPy'), (100, -0.5, 'Essential')], 
+    dtype=[('f0', '<i4'), ('f1', '<f4'), ('f2', 'S10')]) 
+'''
+
+# 字段的每个元素也可以是数组
+z = np.ones((2,), dtype = ('3i4, (2,3)f4')) 
+z 
+'''
+array([([1, 1, 1], [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]), 
+       ([1, 1, 1], [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0]])], 
+      dtype=[('f0', '<i4', (3,)), ('f1', '<f4', (2, 3))]) 
+'''
+
+# 我们也可以给字段类型重命名
+x.dtype.names 
+# ('f0', 'f1', 'f2') 
+x.dtype.names = ('id', 'value', 'note') 
+x 
+''' 
+array([(10, 0.5, 'NumPy'), (100, -0.5, 'Essential')], 
+      dtype=[('id', '<i4'), ('value', '<f4'), ('note', 'S10')]) 
+'''
+
+# 也可以使用字典来表示类型
+# names 键是名称列表，formats 键是类型列表
+dict_ex = np.zeros((2,), dtype = {'names':['id', 'value'], 'formats':['i4', '2f4']}) 
+dict_ex 
+'''
+array([(0, [0.0, 0.0]), (0, [0.0, 0.0])], 
+      dtype=[('id', '<i4'), ('value', '<f4', (2,))]) 
+'''
+
+# 属性索引也支持多值
+x[['id', 'note']]
+'''
+array([(10, 'NumPy'), (100, 'Essential')], 
+      dtype=[('id', '<i4'), ('note', 'S10')]) 
+'''
+```
+
+## 日期时间
+
+```py
+# datetime64 可以使用字符串来构造
+x = np.datetime64('2015-04-01') 
+y = np.datetime64('2015-04') 
+x.dtype, y.dtype 
+# (dtype('<M8[D]'), dtype('<M8[M]'))
+
+# 我们也可以指定最小单位
+# 缺失的值会使用 1 来填充
+y = np.datetime64('2015-04', 'D') 
+y, y.dtype 
+# (numpy.datetime64('2015-04-01'), dtype('<M8[D]')) 
+# 我们可以使用 arange 来生成日期数组
+x = np.arange('2015-01', '2015-04', dtype = 'datetime64[M]') 
+x 
+# array(['2015-01', '2015-02', '2015-03'], dtype='datetime64[M]') 
+
+# 但是只包含日期单位时，不能指定时间单位
+y = np.datetime64('2015-04-01', 's') 
+# TypeError: Cannot parse "2015-04-01" as unit 's' using casting rule 'same_kind' 
+
+# datetime64 相减会生成 timedelta64
+x 
+# array(['2015-01', '2015-02', '2015-03'], dtype='datetime64[M]') 
+y = np.datetime64('2015-01-01') 
+x - y
+# array([ 0, 31, 59], dtype='timedelta64[D]') 
+
+# 我们也可以将 datetime64 与 timedelta64 相加
+# 这表示 2015 年 1 月 1 日加上 12 个月是 2016 年 1 月 1 日
+np.datetime64('2015') + np.timedelta64(12, 'M') 
+# numpy.datetime64('2016-01') 
+# 或者 timedelta64 之间的运算
+# 这表示一周是 7 天
+np.timedelta64(1, 'W') / np.timedelta64(1, 'D') 
+# 7.0 
+
+x 
+# array(['2015-01', '2015-02', '2015-03'], dtype='datetime64[M]') 
+# tolist 将 NumPy 数组转换成 Python 列表
+# 如果数组是 datetime64 类型
+# 每个元素会转为原生的 datetime.data
+x.tolist() 
+'''
+[datetime.date(2015, 1, 1), 
+ datetime.date(2015, 2, 1), 
+ datetime.date(2015, 3, 1)] 
+'''
+
+# datetime64 的 item 方法会返回等价的 datetime.date 对象
+[element.item() for element in x]
+'''
+[datetime.date(2015, 1, 1), 
+ datetime.date(2015, 2, 1), 
+ datetime.date(2015, 3, 1)] 
+'''
+``` 
+
+## NumPy 文件 IO
+
+```py
+
+# 首先创建记录数组
+id = np.arange(1000) 
+value = np.random.random(1000) 
+day = np.random.random_integers(0, 365, 1000) * np.timedelta64(1,'D') 
+date = np.datetime64('2014-01-01') + day 
+# np.core.records.fromarrays 从字段数组创建记录数组
+rec_array = np.core.records.fromarrays([id, value, date], names='id, value, date', formats='i4, f4, a10') 
+rec_array[:5] 
+'''
+rec.array([(0, 0.07019801437854767, '2014-07-10'), 
+       (1, 0.4863224923610687, '2014-12-03'), 
+       (2, 0.9525277614593506, '2014-03-11'), 
+       (3, 0.39706873893737793, '2014-01-02'), 
+       (4, 0.8536589741706848, '2014-09-14')], 
+      dtype=[('id', '<i4'), ('value', '<f4'), ('date', 'S10')]) 
+'''
+
+# savetxt 以纯文本形式保存数组
+# 将格式指定为逗号分隔，所以它是 CSV
+np.savetxt('./record.csv', rec_array, fmt='%i,%.4f,%s') 
+
+# 我们需要将其读进来
+# 并指定类型和分隔符
+# 使用 np.loadtxt 也可以
+read_array = np.genfromtxt('./record.csv', dtype='i4,f4,a10', delimiter=',', skip_header=0) 
+read_array[:5] 
+'''
+array([(0, 0.07020000368356705, '2014-07-10'), 
+       (1, 0.486299991607666, '2014-12-03'), 
+       (2, 0.9524999856948853, '2014-03-11'), 
+       (3, 0.3971000015735626, '2014-01-02'), 
+       (4, 0.8536999821662903, '2014-09-14')], 
+      dtype=[('f0', '<i4'), ('f1', '<f4'), ('f2', 'S10')]) 
+'''
+
+# 为字段重命名
+read_array.dtype.names = ('id', 'value', 'date')
+
+# 获取 value 字段是否大于 0.75
+mask = read_array['value'] >= 0.75 
+from numpy.lib.recfunctions import append_fields 
+# append_fields 添加新的字段
+# 参数依次是源数组、新字段名称、数据和类型
+read_array = append_fields(read_array, 'mask', data=mask, dtypes='i1') 
+read_array[:5] 
+'''
+masked_array(data = [(0, 0.07020000368356705, '2014-07-10', 0) 
+ (1, 0.486299991607666, '2014-12-03', 0)
+ 
+ (2, 0.9524999856948853, '2014-03-11', 1) 
+ (3, 0.3971000015735626, '2014-01-02', 0) 
+dtype = [('id', '<i4'), ('value', '<f4'), ('date', 'S10'), ('mask','i1')]) 
+'''
+```
