@@ -140,17 +140,11 @@ Feature Selection 最实用的方法也就是看 Random Forest 训练完以后�
 
 通常我们会通过一个叫做 [Grid Search](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html)) 的过程来确定一组最佳的参数。其实这个过程说白了就是根据给定的参数候选对所有的组合进行暴力搜索。
 
-1
-
-2
-
-3
-
-param_grid = {'n_estimators': \[300, 500\], 'max_features': \[10, 12, 14\]}
-
-model = grid\_search.GridSearchCV(estimator=rfr, param\_grid=param\_grid, n\_jobs=1, cv=10, verbose=20, scoring=RMSE)
-
-model.fit(X\_train, y\_train)
+```
+param_grid = {'n_estimators': [300, 500], 'max_features': [10, 12, 14]}
+model = grid_search.GridSearchCV(estimator=rfr, param_grid=param_grid, n_jobs=1, cv=10, verbose=20, scoring=RMSE)
+model.fit(X_train, y_train)
+```
 
 顺带一提，Random Forest 一般在 `max_features` 设为 Feature 数量的平方根附近得到最佳结果。
 
@@ -171,73 +165,25 @@ model.fit(X\_train, y\_train)
 4.  逐步将 `eta` 降低，找到最佳值。
 5.  以验证集为 watchlist，用找到的最佳参数组合重新在训练集上训练。注意观察算法的输出，看每次迭代后在验证集上分数的变化情况，从而得到最佳的 `early_stopping_rounds`。
 
-1
-
-2
-
-3
-
-4
-
-5
-
-6
-
-7
-
-8
-
-9
-
-10
-
-11
-
-12
-
-13
-
-14
-
-15
-
-16
-
-17
-
-X\_dtrain, X\_deval, y\_dtrain, y\_deval = cross\_validation.train\_test\_split(X\_train, y\_train, random\_state=1026, test_size=0.3)
-
-dtrain = xgb.DMatrix(X\_dtrain, y\_dtrain)
-
-deval = xgb.DMatrix(X\_deval, y\_deval)
-
-watchlist = \[(deval, 'eval')\]
-
+```
+X_dtrain, X_deval, y_dtrain, y_deval = cross_validation.train_test_split(X_train, y_train, random_state=1026, test_size=0.3)
+dtrain = xgb.DMatrix(X_dtrain, y_dtrain)
+deval = xgb.DMatrix(X_deval, y_deval)
+watchlist = [(deval, 'eval')]
 params = {
-
     'booster': 'gbtree',
-
     'objective': 'reg:linear',
-
     'subsample': 0.8,
-
     'colsample_bytree': 0.85,
-
     'eta': 0.05,
-
     'max_depth': 7,
-
     'seed': 2016,
-
     'silent': 0,
-
     'eval_metric': 'rmse'
-
 }
-
-clf = xgb.train(params, dtrain, 500, watchlist, early\_stopping\_rounds=50)
-
+clf = xgb.train(params, dtrain, 500, watchlist, early_stopping_rounds=50)
 pred = clf.predict(xgb.DMatrix(df_test))
+```
 
 最后要提一点，所有具有随机性的 Model 一般都会有一个 `seed` 或是 `random_state` 参数用于控制随机种子。得到一个好的 Model 后，在记录参数时务必也记录下这个值，从而能够在之后重现 Model。
 
@@ -275,127 +221,35 @@ pred = clf.predict(xgb.DMatrix(df_test))
 
 这里给出我的实现代码：
 
-1
-
-2
-
-3
-
-4
-
-5
-
-6
-
-7
-
-8
-
-9
-
-10
-
-11
-
-12
-
-13
-
-14
-
-15
-
-16
-
-17
-
-18
-
-19
-
-20
-
-21
-
-22
-
-23
-
-24
-
-25
-
-26
-
-27
-
-28
-
-29
-
-30
-
-31
-
-32
-
-33
-
-34
-
+```
 class Ensemble(object):
-
-    def \_\_init\_\_(self, n\_folds, stacker, base\_models):
-
-        self.n\_folds = n\_folds
-
+    def __init__(self, n_folds, stacker, base_models):
+        self.n_folds = n_folds
         self.stacker = stacker
-
-        self.base\_models = base\_models
-
+        self.base_models = base_models
     def fit_predict(self, X, y, T):
-
         X = np.array(X)
-
         y = np.array(y)
-
         T = np.array(T)
-
-        folds = list(KFold(len(y), n\_folds=self.n\_folds, shuffle=True, random_state=2016))
-
-        S_train = np.zeros((X.shape\[0\], len(self.base_models)))
-
-        S_test = np.zeros((T.shape\[0\], len(self.base_models)))
-
+        folds = list(KFold(len(y), n_folds=self.n_folds, shuffle=True, random_state=2016))
+        S_train = np.zeros((X.shape[0], len(self.base_models)))
+        S_test = np.zeros((T.shape[0], len(self.base_models)))
         for i, clf in enumerate(self.base_models):
-
-            S\_test\_i = np.zeros((T.shape\[0\], len(folds)))
-
-            for j, (train\_idx, test\_idx) in enumerate(folds):
-
-                X\_train = X\[train\_idx\]
-
-                y\_train = y\[train\_idx\]
-
-                X\_holdout = X\[test\_idx\]
-
-                \# y\_holdout = y\[test\_idx\]
-
-                clf.fit(X\_train, y\_train)
-
-                y\_pred = clf.predict(X\_holdout)\[:\]
-
-                S\_train\[test\_idx, i\] = y_pred
-
-                S\_test\_i\[:, j\] = clf.predict(T)\[:\]
-
-            S\_test\[:, i\] = S\_test_i.mean(1)
-
+            S_test_i = np.zeros((T.shape[0], len(folds)))
+            for j, (train_idx, test_idx) in enumerate(folds):
+                X_train = X[train_idx]
+                y_train = y[train_idx]
+                X_holdout = X[test_idx]
+                # y_holdout = y[test_idx]
+                clf.fit(X_train, y_train)
+                y_pred = clf.predict(X_holdout)[:]
+                S_train[test_idx, i] = y_pred
+                S_test_i[:, j] = clf.predict(T)[:]
+            S_test[:, i] = S_test_i.mean(1)
         self.stacker.fit(S_train, y)
-
-        y\_pred = self.stacker.predict(S\_test)\[:\]
-
+        y_pred = self.stacker.predict(S_test)[:]
         return y_pred
+```
 
 获奖选手往往会使用比这复杂得多的 Ensemble，会出现三层、四层甚至五层，不同的层数之间有各种交互，还有将经过不同的 Preprocessing 和不同的 Feature Engineering 的数据用 Ensemble 组合起来的做法。但对于新手来说，稳稳当当地实现一个正确的 5-Fold Stacking 已经足够了。
 
