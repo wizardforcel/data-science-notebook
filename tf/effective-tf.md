@@ -541,9 +541,9 @@ for i in range(10):
 
 ## 八、控制流操作：条件和循环
 
-在构建复杂模型（如循环神经网络）时，您可能需要通过条件和循环来控制操作流。 在本节中，我们将介绍一些常用的控制流操作。
+在构建复杂模型（如循环神经网络）时，你可能需要通过条件和循环来控制操作流。 在本节中，我们将介绍一些常用的控制流操作。
 
-假设您要根据谓词决定，是否相乘或相加两个给定的张量。这可以简单地用`tf.cond`实现，它充当 python "if" 函数：
+假设你要根据谓词决定，是否相乘或相加两个给定的张量。这可以简单地用`tf.cond`实现，它充当 python "if" 函数：
 
 ```py
 a = tf.constant(1)
@@ -558,7 +558,7 @@ print(tf.Session().run(x))
 
 由于在这种情况下谓词为`True`，因此输出将是加法的结果，即 3。
 
-大多数情况下，使用 TensorFlow 时，您使用的是大型张量，并希望批量执行操作。 相关的条件操作是`tf.where`，类似于`tf.cond`，它接受谓词，但是基于批量中的条件来选择输出。
+大多数情况下，使用 TensorFlow 时，你使用的是大型张量，并希望批量执行操作。 相关的条件操作是`tf.where`，类似于`tf.cond`，它接受谓词，但是基于批量中的条件来选择输出。
 
 ```py
 a = tf.constant([1, 1])
@@ -607,7 +607,7 @@ i, a, b, c = tf.while_loop(cond, body, (2, 1, 1, tf.constant([1, 1])))
 print(tf.Session().run(c))
 ```
 
-现在，如果你尝试运行它，TensorFlow 会报错，第四个循环变量的形状改变了。 因此，您必须明确指出它是有意的：
+现在，如果你尝试运行它，TensorFlow 会报错，第四个循环变量的形状改变了。 因此，你必须明确指出它是有意的：
 
 ```py
 i, a, b, c = tf.while_loop(
@@ -641,11 +641,11 @@ c = c.stack()
 print(tf.Session().run(c))
 ```
 
-TensorFlow while 循环和张量数组是构建复杂的循环神经网络的基本工具。 作为练习，尝试使用`tf.while_loops`实现集束搜索（beam search）。 使用张量数组可以使效率更高吗？
+TensorFlow while 循环和张量数组是构建复杂的循环神经网络的基本工具。 作为练习，尝试使用`tf.while_loops`实现[集束搜索（beam search）](https://en.wikipedia.org/wiki/Beam_search)。 使用张量数组可以使效率更高吗？
 
 ## 九、使用 Python 操作设计核心和高级可视化
 
-TensorFlow 中的操作核心完全用 C++ 编写，用于提高效率。 但是用 C++ 编写 TensorFlow 核心可能会非常痛苦。因此，在花费数小时实现核心之前，您可能希望快速创建原型，但效率低下。使用`tf.py_func()`，您可以将任何一段 python 代码转换为 TensorFlow 操作。
+TensorFlow 中的操作核心完全用 C++ 编写，用于提高效率。 但是用 C++ 编写 TensorFlow 核心可能会非常痛苦。因此，在花费数小时实现核心之前，你可能希望快速创建原型，但效率低下。使用`tf.py_func()`，你可以将任何一段 python 代码转换为 TensorFlow 操作。
 
 例如，这就是如何在 TensorFlow 中将一个简单的 ReLU 非线性核心实现为 python 操作：
 
@@ -695,14 +695,14 @@ with tf.Session():
 
 请注意，此实现效率非常低，仅适用于原型设计，因为 python 代码不可并行化，不能在 GPU 上运行。 一旦验证了你的想法，你肯定会想把它写成 C++ 核心。
 
-在实践中，我们通常使用 python 操作在 Tensorboard 上进行可视化。 考虑您正在构建图像分类模型，并希望在训练期间可视化模型的预测情况。TensorFlow 允许使用`tf.summary.image()`函数可视化图像：
+在实践中，我们通常使用 python 操作在 Tensorboard 上进行可视化。 考虑你正在构建图像分类模型，并希望在训练期间可视化模型的预测情况。TensorFlow 允许使用`tf.summary.image()`函数可视化图像：
 
 ```py
 image = tf.placeholder(tf.float32)
 tf.summary.image("image", image)
 ```
 
-但这只能显示输入图像。 为了显示预测，您必须找到一种向图像添加注释的方法，这对现有操作几乎是不可能的。 更简单的方法是在 python 中绘制，并将其包装在 python 操作中：
+但这只能显示输入图像。 为了显示预测，你必须找到一种向图像添加注释的方法，这对现有操作几乎是不可能的。 更简单的方法是在 python 中绘制，并将其包装在 python 操作中：
 
 ```py
 import io
@@ -748,7 +748,7 @@ def visualize_labeled_images(images, labels, max_outputs=3, name="image"):
 
 ## 十、多 GPU 和数据并行
 
-如果您使用 C++ 等语言为单个 CPU 核心编写软件，并使其在多个 GPU 上并行运行，则需要从头开始重写软件。 但TensorFlow并非如此。 由于其象征性，TensorFlow 可以隐藏所有这些复杂性，使得无需在多个 CPU 和 GPU 上扩展程序。
+如果你使用 C++ 等语言为单个 CPU 核心编写软件，并使其在多个 GPU 上并行运行，则需要从头开始重写软件。 但TensorFlow并非如此。 由于其象征性，TensorFlow 可以隐藏所有这些复杂性，使得无需在多个 CPU 和 GPU 上扩展程序。
 
 让我们以在 CPU 上相加两个向量的简单示例开始：
 
@@ -809,11 +809,11 @@ def model(a, b):
 c = make_parallel(model, 2, a=a, b=b)
 ```
 
-您可以使用任何接受一组张量作为输入的函数替换模型，并在输入和输出都是批量的条件下，返回张量作为结果。请注意，我们还添加了一个变量作用域并将复用设置为`True`。这确保我们使用相同的变量来处理两个分割。在我们的下一个例子中，这将变得很方便。
+你可以使用任何接受一组张量作为输入的函数替换模型，并在输入和输出都是批量的条件下，返回张量作为结果。请注意，我们还添加了一个变量作用域并将复用设置为`True`。这确保我们使用相同的变量来处理两个分割。在我们的下一个例子中，这将变得很方便。
 
 让我们看一个稍微更实际的例子。我们想在多个 GPU 上训练神经网络。在训练期间，我们不仅需要计算正向传播，还需要计算反向传播（梯度）。但是我们如何并行计算梯度呢？ 事实证明这很简单。
 
-回想一下第一个东西，我们想要将二次多项式拟合到一组样本。我们重新组织了一些代码，以便在模型函数中进行大量操作：
+回想一下第一节，我们想要将二次多项式拟合到一组样本。我们重新组织了一些代码，以便在模型函数中进行大量操作：
 
 ```py
 import numpy as np
@@ -862,3 +862,582 @@ train_op = tf.train.AdamOptimizer(0.1).minimize(
 ```
 
 为了更改为梯度的并行化反向传播，我们需要的唯一的东西是，将`colocate_gradients_with_ops`标志设置为`True`。这可确保梯度操作和原始操作在相同的设备上运行。
+
+## 十一、调试 TensorFlow 模型
+
+与常规 python 代码相比，TensorFlow 的符号性质使调试 TensorFlow 代码变得相对困难。 在这里，我们介绍 TensorFlow 的一些附带工具，使调试更容易。
+
+使用 TensorFlow 时可能出现的最常见错误，可能是将形状错误的张量传递给操作。 许多 TensorFlow 操作可以操作不同维度和形状的张量。 这在使用 API 时很方便，但在出现问题时可能会导致额外的麻烦。
+
+例如，考虑`tf.matmul`操作，它可以相乘两个矩阵：
+
+```py
+a = tf.random_uniform([2, 3])
+b = tf.random_uniform([3, 4])
+c = tf.matmul(a, b)  # c is a tensor of shape [2, 4]
+```
+
+
+但同样的函数也可以进行批量矩阵乘法：
+
+```py
+a = tf.random_uniform([10, 2, 3])
+b = tf.random_uniform([10, 3, 4])
+tf.matmul(a, b)  # c is a tensor of shape [10, 2, 4]
+```
+
+我们之前在广播部分谈到的另一个例子，是支持广播的加法操作：
+
+```py
+a = tf.constant([[1.], [2.]])
+b = tf.constant([1., 2.])
+c = a + b  # c is a tensor of shape [2, 2]
+```
+
+### 使用`tf.assert*`操作验证你的张量
+
+减少不必要行为的可能性的一种方法，是使用`tf.assert*`操作，明确验证中间张量的维度或形状。
+
+```py
+a = tf.constant([[1.], [2.]])
+b = tf.constant([1., 2.])
+check_a = tf.assert_rank(a, 1)  # This will raise an InvalidArgumentError exception
+check_b = tf.assert_rank(b, 1)
+with tf.control_dependencies([check_a, check_b]):
+    c = a + b  # c is a tensor of shape [2, 2]
+```
+
+请记住，断言节点像其他操作一样，是图形的一部分，如果不进行求值，则会在`Session.run()`期间进行修剪。 因此，请确保为断言操作创建显式依赖，来强制 TensorFlow 执行它们。
+
+你还可以使用断言，在运行时验证张量的值：
+
+```py
+check_pos = tf.assert_positive(a)
+```
+
+[断言操作的完整列表](https://www.tensorflow.org/api_guides/python/check_ops)请见官方文档。
+
+### 使用`tf.Print`记录张量的值
+
+用于调试的另一个有用的内置函数是`tf.Print`，它将给定的张量记录到标准错误：
+
+```py
+input_copy = tf.Print(input, tensors_to_print_list)
+```
+
+请注意，`tf.Print`返回第一个参数的副本作为输出。强制`tf.Print`运行的一种方法，是将其输出传递给另一个执行的操作。 例如，如果我们想在添加张量`a`和`b`之前，打印它们的值，我们可以这样做：
+
+```py
+a = ...
+b = ...
+a = tf.Print(a, [a, b])
+c = a + b
+```
+
+或者，我们可以手动定义控制依赖。
+
+### 使用`tf.compute_gradient_error`检查梯度
+
+TensorFlow 中并非所有操作都带有梯度，并且很容易在无意中构建 TensorFlow 无法计算梯度的图形。
+
+我们来看一个例子：
+
+```py
+import tensorflow as tf
+
+def non_differentiable_entropy(logits):
+    probs = tf.nn.softmax(logits)
+    return tf.nn.softmax_cross_entropy_with_logits(labels=probs, logits=logits)
+
+w = tf.get_variable("w", shape=[5])
+y = -non_differentiable_entropy(w)
+
+opt = tf.train.AdamOptimizer()
+train_op = opt.minimize(y)
+
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
+for i in range(10000):
+    sess.run(train_op)
+
+print(sess.run(tf.nn.softmax(w)))
+```
+
+我们使用`tf.nn.softmax_cross_entropy_with_logits`来定义类别分布的熵。然后我们使用 Adam 优化器来找到具有最大熵的权重。如果你通过了信息论课程，你就会知道均匀分布的熵最大。 所以你期望结果是`[0.2,0.2,0.2,0.2,0.2]`。 但如果你运行这个，你可能会得到意想不到的结果：
+
+```py
+[ 0.34081486  0.24287023  0.23465775  0.08935683  0.09230034]
+```
+
+事实证明，`tf.nn.softmax_cross_entropy_with_logits`的梯度对标签是未定义的！ 但如果我们不知道，我们怎么能发现它？
+
+幸运的是，TensorFlow 带有一个数值微分器，可用于查找符号梯度误差。 让我们看看我们如何使用它：
+
+```py
+with tf.Session():
+    diff = tf.test.compute_gradient_error(w, [5], y, [])
+    print(diff)
+```
+
+如果你运行它，你会发现数值和符号梯度之间的差异非常大（在我的尝试中为`0.06 - 0.1`）。
+
+现在让我们使用熵的可导版本，来修复我们的函数并再次检查：
+
+```py
+import tensorflow as tf
+import numpy as np
+
+def entropy(logits, dim=-1):
+    probs = tf.nn.softmax(logits, dim)
+    nplogp = probs * (tf.reduce_logsumexp(logits, dim, keep_dims=True) - logits)
+    return tf.reduce_sum(nplogp, dim)
+
+w = tf.get_variable("w", shape=[5])
+y = -entropy(w)
+
+print(w.get_shape())
+print(y.get_shape())
+
+with tf.Session() as sess:
+    diff = tf.test.compute_gradient_error(w, [5], y, [])
+    print(diff)
+```
+
+差应该约为 0.0001，看起来好多了。
+
+现在，如果再次使用正确的版本运行优化器，你可以看到最终权重为：
+
+```py
+[ 0.2  0.2  0.2  0.2  0.2]
+```
+
+这正是我们想要的。
+
+[TensorFlow 摘要](https://www.tensorflow.org/api_guides/python/summary)和 [tfdbg（TensorFlow 调试器）](https://www.tensorflow.org/api_guides/python/tfdbg)是可用于调试的其他工具。 请参阅官方文档来了解更多信息。
+
+## 十二、TensorFlow 中的数值稳定性
+
+当使用任何数值计算库（如 NumPy 或 TensorFlow）时，重要的是要注意，编写数学上正确的代码并不一定能产生正确的结果。 你还需要确保计算稳定。
+
+让我们从一个简单的例子开始吧。 从小学我们知道`x * y / y`等于`x`的任何非零值。 但是，让我们看看在实践中是否总是如此：
+
+```py
+import numpy as np
+
+x = np.float32(1)
+
+y = np.float32(1e-50)  # y would be stored as zero
+z = x * y / y
+
+print(z)  # prints nan
+```
+
+结果不正确的原因是`y`对于`float32`类型来说太小了。当`y`太大时会出现类似的问题：
+
+```py
+y = np.float32(1e39)  # y would be stored as inf
+z = x * y / y
+
+print(z)  # prints 0
+```
+
+`float32`类型可以表示的最小正值是`1.4013e-45`，低于该值的任何值都将存储为零。 此外，任何超过`3.40282e+38`的数字都将存储为`inf`。
+
+```py
+print(np.nextafter(np.float32(0), np.float32(1)))  # prints 1.4013e-45
+print(np.finfo(np.float32).max)  # print 3.40282e+38
+```
+
+为确保计算稳定，你需要避免使用绝对值非常小或大的值。这可能听起来非常明显，但这些问题可能变得非常难以调试，尤其是在 TensorFlow 中进行梯度下降时。这是因为你不仅需要确保正向传播中的所有值都在数据类型的有效范围内，而且还需要确保反向传播也相同（在梯度计算期间）。
+
+让我们看一个真实的例子。 我们想要在`logits`向量上计算 softmax。 一个朴素的实现看起来像这样：
+
+```py
+import tensorflow as tf
+
+def unstable_softmax(logits):
+    exp = tf.exp(logits)
+    return exp / tf.reduce_sum(exp)
+
+tf.Session().run(unstable_softmax([1000., 0.]))  # prints [ nan, 0.]
+```
+
+请注意，计算`logits`中相对较小数字的指数会产生浮点范围之外的巨大结果。 我们的初始 softmax 实现的最大有效`logit`是`ln(3.40282e + 38）= 88.7`，除此之外的任何东西都会产生`nan`结果。
+
+但是我们怎样才能让它更稳定呢？ 解决方案相当简单。 很容易看出`exp(x - c)/Σexp(x - c)= exp(x)/Σexp(x)`。 因此，我们可以从`logits`中减去任何常量，结果将保持不变。 我们选择此常量作为`logits`的最大值。 这样，指数函数的定义域将被限制为`[-inf，0]`，因此其值域将是`[0.0,1.0]`，这是预期的：
+
+```py
+import tensorflow as tf
+
+def softmax(logits):
+    exp = tf.exp(logits - tf.reduce_max(logits))
+    return exp / tf.reduce_sum(exp)
+
+tf.Session().run(softmax([1000., 0.]))  # prints [ 1., 0.]
+```
+
+让我们来看一个更复杂的案例。 考虑一下我们的分类问题。 我们使用 softmax 函数从我们的`logits`中产生概率。 然后，我们将损失函数定义为，我们的预测和标签之间的交叉熵。回想一下，分类分布的交叉熵可以简单地定义为`xe(p, q) = -∑ p_i log(q_i)`。 所以交叉熵的朴素实现看起来像这样：
+
+```py
+def unstable_softmax_cross_entropy(labels, logits):
+    logits = tf.log(softmax(logits))
+    return -tf.reduce_sum(labels * logits)
+
+labels = tf.constant([0.5, 0.5])
+logits = tf.constant([1000., 0.])
+
+xe = unstable_softmax_cross_entropy(labels, logits)
+
+print(tf.Session().run(xe))  # prints inf
+```
+
+注意，在此实现中，当 softmax 输出接近零时，`log`的输出接近无穷大，这导致我们的计算不稳定。 我们可以通过扩展 softmax 并进行一些简化来重写它：
+
+```py
+def softmax_cross_entropy(labels, logits):
+    scaled_logits = logits - tf.reduce_max(logits)
+    normalized_logits = scaled_logits - tf.reduce_logsumexp(scaled_logits)
+    return -tf.reduce_sum(labels * normalized_logits)
+
+labels = tf.constant([0.5, 0.5])
+logits = tf.constant([1000., 0.])
+
+xe = softmax_cross_entropy(labels, logits)
+
+print(tf.Session().run(xe))  # prints 500.0
+```
+
+我们还可以验证梯度是否也计算正确：
+
+```py
+g = tf.gradients(xe, logits)
+print(tf.Session().run(g))  # prints [0.5, -0.5]
+```
+
+是正确的。
+
+让我再次提醒一下，在进行梯度下降时必须格外小心，来确保函数范围以及每层的梯度都在有效范围内。 指数和对数函数在朴素使用时尤其成问题，因为它们可以将小数字映射到大数字，反之亦然。
+
+## 十三、使用学习 API 构建神经网络训练框架
+
+为简单起见，在这里的大多数示例中，我们手动创建会话，我们不关心保存和加载检查点，但这不是我们通常在实践中做的事情。你最有可能希望使用学习 API 来处理会话管理和日志记录。 我们提供了一个简单但实用的框架，用于使用 TensorFlow 训练神经网络。在本节中，我们将解释此框架的工作原理。
+
+在试验神经网络模型时，你通常需要进行训练/测试分割。你希望在训练集上训练你的模型，之后在测试集上评估它并计算一些指标。你还需要将模型参数存储为检查点，理想情况下，你希望能够停止和恢复训练。TensorFlow 的学习 API 旨在使这项工作更容易，让我们专注于开发实际模型。
+
+使用`tf.learn` API 的最基本方法是直接使用`tf.Estimator`对象。 你需要定义模型函数，它定义了损失函数，训练操作，一个或一组预测，以及一组用于求值的可选的指标操作：
+
+```py
+import tensorflow as tf
+
+def model_fn(features, labels, mode, params):
+    predictions = ...
+    loss = ...
+    train_op = ...
+    metric_ops = ...
+    return tf.estimator.EstimatorSpec(
+        mode=mode,
+        predictions=predictions,
+        loss=loss,
+        train_op=train_op,
+        eval_metric_ops=metric_ops)
+
+params = ...
+run_config = tf.contrib.learn.RunConfig(model_dir=FLAGS.output_dir)
+estimator = tf.estimator.Estimator(
+    model_fn=model_fn, config=run_config, params=params)
+```
+
+要训练模型，你只需调用`Estimator.train(0`函数，同时提供读取数据的输入函数。
+
+```py
+def input_fn():
+    features = ...
+    labels = ...
+    return features, labels
+
+estimator.train(input_fn=input_fn, max_steps=...)
+```
+
+要评估模型，只需调用`Estimator.evaluate()`：
+
+```py
+estimator.evaluate(input_fn=input_fn)
+```
+
+对于简单的情况，`Estimator`对象可能已经足够好了，但 TensorFlow 提供了一个名为`Experiment`的更高级别的对象，它提供了一些额外的有用功能。创建实验对象非常简单：
+
+```py
+experiment = tf.contrib.learn.Experiment(
+    estimator=estimator,
+    train_input_fn=train_input_fn,
+    eval_input_fn=eval_input_fn,
+    eval_metrics=eval_metrics)
+```
+
+现在我们可以调用`train_and_evaluate`函数来计算训练时的指标。
+
+```py
+experiment.train_and_evaluate()
+```
+
+更高级别的运行实验的方法，是使用`learn_runner.run()`函数。以下是我们的主函数在提供的框架中的样子：
+
+```py
+import tensorflow as tf
+
+tf.flags.DEFINE_string("output_dir", "", "Optional output dir.")
+tf.flags.DEFINE_string("schedule", "train_and_evaluate", "Schedule.")
+tf.flags.DEFINE_string("hparams", "", "Hyper parameters.")
+
+FLAGS = tf.flags.FLAGS
+
+def experiment_fn(run_config, hparams):
+  estimator = tf.estimator.Estimator(
+    model_fn=make_model_fn(), config=run_config, params=hparams)
+  return tf.contrib.learn.Experiment(
+    estimator=estimator,
+    train_input_fn=make_input_fn(tf.estimator.ModeKeys.TRAIN, hparams),
+    eval_input_fn=make_input_fn(tf.estimator.ModeKeys.EVAL, hparams),
+    eval_metrics=eval_metrics_fn(hparams))
+
+def main(unused_argv):
+  run_config = tf.contrib.learn.RunConfig(model_dir=FLAGS.output_dir)
+  hparams = tf.contrib.training.HParams()
+  hparams.parse(FLAGS.hparams)
+
+  estimator = tf.contrib.learn.learn_runner.run(
+    experiment_fn=experiment_fn,
+    run_config=run_config,
+    schedule=FLAGS.schedule,
+    hparams=hparams)
+
+if __name__ == "__main__":
+  tf.app.run()
+```
+
+`schedule`标志决定调用`Experiment`对象的哪个成员函数。 因此，如果你将`schedule`设置为`train_and_evaluate`，则会调用`experiment.train_and_evaluate()`。
+
+输入函数可以返回两个张量（或张量的字典），提供要传递给模型的特征和标签。
+
+```py
+def input_fn():
+    features = ...
+    labels = ...
+    return features, labels
+```
+
+对于如何使用数据集 API 读取数据的示例，请参阅[`mnist.py`](https://github.com/vahidk/TensorflowFramework/blob/master/dataset/mnist.py)。要了解在 TensorFlow 中阅读数据的各种方法，请参阅[这里](https://yiyibooks.cn/__trs__/wizard/effective-tf/13.html#data)。
+
+该框架还附带了一个简单的卷积网络分类器，在[`cnn_classifier.py`](https://github.com/vahidk/TensorflowFramework/blob/master/model/cnn_classifier.py)中，其中包含一个示例模型。
+
+就是这样！ 这就是开始使用 TensorFlow 学习 API 所需的全部内容。我建议你查看框架[源代码](https://github.com/vahidk/TensorFlowFramework)并查看官方 python API 来了解学习 API 的更多信息。
+
+## 十四、TensorFlow 秘籍
+
+本节包括在 TensorFlow 中实现的一组常用操作。
+
+### 集束搜索
+
+```py
+import tensorflow as tf
+
+def get_shape(tensor):
+  """Returns static shape if available and dynamic shape otherwise."""
+  static_shape = tensor.shape.as_list()
+  dynamic_shape = tf.unstack(tf.shape(tensor))
+  dims = [s[1] if s[0] is None else s[0]
+          for s in zip(static_shape, dynamic_shape)]
+  return dims
+
+def log_prob_from_logits(logits, axis=-1):
+  """Normalize the log-probabilities so that probabilities sum to one."""
+  return logits - tf.reduce_logsumexp(logits, axis=axis, keep_dims=True)
+
+def batch_gather(tensor, indices):
+  """Gather in batch from a tensor of arbitrary size.
+
+  In pseudocode this module will produce the following:
+  output[i] = tf.gather(tensor[i], indices[i])
+
+  Args:
+    tensor: Tensor of arbitrary size.
+    indices: Vector of indices.
+  Returns:
+    output: A tensor of gathered values.
+  """
+  shape = get_shape(tensor)
+  flat_first = tf.reshape(tensor, [shape[0] * shape[1]] + shape[2:])
+  indices = tf.convert_to_tensor(indices)
+  offset_shape = [shape[0]] + [1] * (indices.shape.ndims - 1)
+  offset = tf.reshape(tf.range(shape[0]) * shape[1], offset_shape)
+  output = tf.gather(flat_first, indices + offset)
+  return output
+
+def rnn_beam_search(update_fn, initial_state, sequence_length, beam_width,
+                    begin_token_id, end_token_id, name="rnn"):
+  """Beam-search decoder for recurrent models.
+
+  Args:
+    update_fn: Function to compute the next state and logits given the current
+               state and ids.
+    initial_state: Recurrent model states.
+    sequence_length: Length of the generated sequence.
+    beam_width: Beam width.
+    begin_token_id: Begin token id.
+    end_token_id: End token id.
+    name: Scope of the variables.
+  Returns:
+    ids: Output indices.
+    logprobs: Output log probabilities probabilities.
+  """
+  batch_size = initial_state.shape.as_list()[0]
+
+  state = tf.tile(tf.expand_dims(initial_state, axis=1), [1, beam_width, 1])
+
+  sel_sum_logprobs = tf.log([[1.] + [0.] * (beam_width - 1)])
+
+  ids = tf.tile([[begin_token_id]], [batch_size, beam_width])
+  sel_ids = tf.expand_dims(ids, axis=2)
+
+  mask = tf.ones([batch_size, beam_width], dtype=tf.float32)
+
+  for i in range(sequence_length):
+    with tf.variable_scope(name, reuse=True if i > 0 else None):
+
+      state, logits = update_fn(state, ids)
+      logits = log_prob_from_logits(logits)
+
+      sum_logprobs = (
+          tf.expand_dims(sel_sum_logprobs, axis=2) +
+          (logits * tf.expand_dims(mask, axis=2)))
+
+      num_classes = logits.shape.as_list()[-1]
+
+      sel_sum_logprobs, indices = tf.nn.top_k(
+          tf.reshape(sum_logprobs, [batch_size, num_classes * beam_width]),
+          k=beam_width)
+
+      ids = indices % num_classes
+
+      beam_ids = indices // num_classes
+
+      state = batch_gather(state, beam_ids)
+
+      sel_ids = tf.concat([batch_gather(sel_ids, beam_ids),
+                           tf.expand_dims(ids, axis=2)], axis=2)
+
+      mask = (batch_gather(mask, beam_ids) *
+              tf.to_float(tf.not_equal(ids, end_token_id)))
+
+  return sel_ids, sel_sum_logprobs
+```
+
+### 合并
+
+```py
+import tensorflow as tf
+
+def merge(tensors, units, activation=tf.nn.relu, name=None, **kwargs):
+  """Merge features with broadcasting support.
+
+  This operation concatenates multiple features of varying length and applies
+  non-linear transformation to the outcome.
+
+  Example:
+    a = tf.zeros([m, 1, d1])
+    b = tf.zeros([1, n, d2])
+    c = merge([a, b], d3)  # shape of c would be [m, n, d3].
+
+  Args:
+    tensors: A list of tensor with the same rank.
+    units: Number of units in the projection function.
+  """
+  with tf.variable_scope(name, default_name="merge"):
+    # Apply linear projection to input tensors.
+    projs = []
+    for i, tensor in enumerate(tensors):
+      proj = tf.layers.dense(
+          tensor, units, activation=None,
+          name="proj_%d" % i,
+          **kwargs)
+      projs.append(proj)
+
+    # Compute sum of tensors.
+    result = projs.pop()
+    for proj in projs:
+      result = result + proj
+
+    # Apply nonlinearity.
+    if activation:
+      result = activation(result)
+  return result
+```
+
+### 熵
+
+```py
+import tensorflow as tf
+
+def softmax(logits, dims=-1):
+  """Compute softmax over specified dimensions."""
+  exp = tf.exp(logits - tf.reduce_max(logits, dims, keep_dims=True))
+  return exp / tf.reduce_sum(exp, dims, keep_dims=True)
+
+def entropy(logits, dims=-1):
+  """Compute entropy over specified dimensions."""
+  probs = softmax(logits, dims)
+  nplogp = probs * (tf.reduce_logsumexp(logits, dims, keep_dims=True) - logits)
+  return tf.reduce_sum(nplogp, dims)
+```
+
+### KL 散度
+
+```py
+def gaussian_kl(q, p=(0., 0.)):
+  """Computes KL divergence between two isotropic Gaussian distributions.
+
+  To ensure numerical stability, this op uses mu, log(sigma^2) to represent
+  the distribution. If q is not provided, it's assumed to be unit Gaussian.
+
+  Args:
+    q: A tuple (mu, log(sigma^2)) representing a multi-variatie Gaussian.
+    p: A tuple (mu, log(sigma^2)) representing a multi-variatie Gaussian.
+  Returns:
+    A tensor representing KL(q, p).
+  """
+  mu1, log_sigma1_sq = q
+  mu2, log_sigma2_sq = p
+  return tf.reduce_sum(
+    0.5 * (log_sigma2_sq - log_sigma1_sq +
+           tf.exp(log_sigma1_sq - log_sigma2_sq) +
+           tf.square(mu1 - mu2) / tf.exp(log_sigma2_sq) -
+           1), axis=-1)
+```
+
+### 并行化
+
+```py
+def make_parallel(fn, num_gpus, **kwargs):
+  """Parallelize given model on multiple gpu devices.
+
+  Args:
+    fn: Arbitrary function that takes a set of input tensors and outputs a
+        single tensor. First dimension of inputs and output tensor are assumed
+        to be batch dimension.
+    num_gpus: Number of GPU devices.
+    **kwargs: Keyword arguments to be passed to the model.
+  Returns:
+    A tensor corresponding to the model output.
+  """
+  in_splits = {}
+  for k, v in kwargs.items():
+    in_splits[k] = tf.split(v, num_gpus)
+
+  out_split = []
+  for i in range(num_gpus):
+    with tf.device(tf.DeviceSpec(device_type="GPU", device_index=i)):
+      with tf.variable_scope(tf.get_variable_scope(), reuse=i > 0):
+        out_split.append(fn(**{k : v[i] for k, v in in_splits.items()}))
+
+  return tf.concat(out_split, axis=0)
+```
