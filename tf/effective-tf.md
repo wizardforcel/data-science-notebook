@@ -539,3 +539,327 @@ for i in range(10):
 ```
 
 这会确保赋值操作在加法操作之后被调用。
+
+## 八、控制流操作：条件和循环
+
+在构建复杂模型（如循环神经网络）时，您可能需要通过条件和循环来控制操作流。 在本节中，我们将介绍一些常用的控制流操作。
+
+假设您要根据谓词决定，是否相乘或相加两个给定的张量。这可以简单地用`tf.cond`实现，它充当 python "if" 函数：
+
+```py
+a = tf.constant(1)
+b = tf.constant(2)
+
+p = tf.constant(True)
+
+x = tf.cond(p, lambda: a + b, lambda: a * b)
+
+print(tf.Session().run(x))
+```
+
+由于在这种情况下谓词为`True`，因此输出将是加法的结果，即 3。
+
+大多数情况下，使用 TensorFlow 时，您使用的是大型张量，并希望批量执行操作。 相关的条件操作是`tf.where`，类似于`tf.cond`，它接受谓词，但是基于批量中的条件来选择输出。
+
+```py
+a = tf.constant([1, 1])
+b = tf.constant([2, 2])
+
+p = tf.constant([True, False])
+
+x = tf.where(p, a + b, a * b)
+
+print(tf.Session().run(x))
+```
+
+这将返回`[3,2]`。
+
+另一种广泛使用的控制流操作是`tf.while_loop`。 它允许在 TensorFlow 中构建动态循环，这些循环操作可变长度的序列。 让我们看看如何使用`tf.while_loops`生成斐波那契序列：
+
+```py
+n = tf.constant(5)
+
+def cond(i, a, b):
+    return i < n
+
+def body(i, a, b):
+    return i + 1, b, a + b
+
+i, a, b = tf.while_loop(cond, body, (2, 1, 1))
+
+print(tf.Session().run(b))
+```
+
+这将打印 5。除了循环变量的初始值之外，`tf.while_loops`还接受条件函数和循环体函数。 然后通过多次调用循环体函数来更新这些循环变量，直到条件返回`False`。
+
+现在想象我们想要保留整个斐波那契序列。 我们可以更新我们的循环体来记录当前值的历史：
+
+```py
+n = tf.constant(5)
+
+def cond(i, a, b, c):
+    return i < n
+
+def body(i, a, b, c):
+    return i + 1, b, a + b, tf.concat([c, [a + b]], 0)
+
+i, a, b, c = tf.while_loop(cond, body, (2, 1, 1, tf.constant([1, 1])))
+
+print(tf.Session().run(c))
+```
+
+现在，如果你尝试运行它，TensorFlow 会报错，第四个循环变量的形状改变了。 因此，您必须明确指出它是有意的：
+
+```py
+i, a, b, c = tf.while_loop(
+    cond, body, (2, 1, 1, tf.constant([1, 1])),
+    shape_invariants=(tf.TensorShape([]),
+                      tf.TensorShape([]),
+                      tf.TensorShape([]),
+                      tf.TensorShape([None])))
+```
+
+这不仅变得丑陋，而且效率也有些低下。 请注意，我们正在构建许多我们不使用的中间张量。 TensorFlow 为这种不断增长的阵列提供了更好的解决方案。 看看`tf.TensorArray`。 让我们这次用张量数组做同样的事情：
+
+```py
+n = tf.constant(5)
+
+c = tf.TensorArray(tf.int32, n)
+c = c.write(0, 1)
+c = c.write(1, 1)
+
+def cond(i, a, b, c):
+    return i < n
+
+def body(i, a, b, c):
+    c = c.write(i, a + b)
+    return i + 1, b, a + b, c
+
+i, a, b, c = tf.while_loop(cond, body, (2, 1, 1, c))
+
+c = c.stack()
+
+print(tf.Session().run(c))
+```
+
+TensorFlow while 循环和张量数组是构建复杂的循环神经网络的基本工具。 作为练习，尝试使用`tf.while_loops`实现集束搜索（beam search）。 使用张量数组可以使效率更高吗？
+
+## 九、使用 Python 操作设计核心和高级可视化
+
+TensorFlow 中的操作核心完全用 C++ 编写，用于提高效率。 但是用 C++ 编写 TensorFlow 核心可能会非常痛苦。因此，在花费数小时实现核心之前，您可能希望快速创建原型，但效率低下。使用`tf.py_func()`，您可以将任何一段 python 代码转换为 TensorFlow 操作。
+
+例如，这就是如何在 TensorFlow 中将一个简单的 ReLU 非线性核心实现为 python 操作：
+
+```py
+import numpy as np
+import tensorflow as tf
+import uuid
+
+def relu(inputs):
+    # Define the op in python
+    def _relu(x):
+        return np.maximum(x, 0.)
+
+    # Define the op's gradient in python
+    def _relu_grad(x):
+        return np.float32(x > 0)
+
+    # An adapter that defines a gradient op compatible with TensorFlow
+    def _relu_grad_op(op, grad):
+        x = op.inputs[0]
+        x_grad = grad * tf.py_func(_relu_grad, [x], tf.float32)
+        return x_grad
+
+    # Register the gradient with a unique id
+    grad_name = "MyReluGrad_" + str(uuid.uuid4())
+    tf.RegisterGradient(grad_name)(_relu_grad_op)
+
+    # Override the gradient of the custom op
+    g = tf.get_default_graph()
+    with g.gradient_override_map({"PyFunc": grad_name}):
+        output = tf.py_func(_relu, [inputs], tf.float32)
+    return output
+```
+
+要验证梯度是否正确，可以使用 TensorFlow 的梯度检查器：
+
+```py
+x = tf.random_normal([10])
+y = relu(x * x)
+
+with tf.Session():
+    diff = tf.test.compute_gradient_error(x, [10], y, [10])
+    print(diff)
+```
+
+`compute_gradient_error()`以数值方式计算梯度，并返回提供的梯度的差。 我们想要的是非常低的差。
+
+请注意，此实现效率非常低，仅适用于原型设计，因为 python 代码不可并行化，不能在 GPU 上运行。 一旦验证了你的想法，你肯定会想把它写成 C++ 核心。
+
+在实践中，我们通常使用 python 操作在 Tensorboard 上进行可视化。 考虑您正在构建图像分类模型，并希望在训练期间可视化模型的预测情况。TensorFlow 允许使用`tf.summary.image()`函数可视化图像：
+
+```py
+image = tf.placeholder(tf.float32)
+tf.summary.image("image", image)
+```
+
+但这只能显示输入图像。 为了显示预测，您必须找到一种向图像添加注释的方法，这对现有操作几乎是不可能的。 更简单的方法是在 python 中绘制，并将其包装在 python 操作中：
+
+```py
+import io
+import matplotlib.pyplot as plt
+import numpy as np
+import PIL
+import tensorflow as tf
+
+def visualize_labeled_images(images, labels, max_outputs=3, name="image"):
+    def _visualize_image(image, label):
+        # Do the actual drawing in python
+        fig = plt.figure(figsize=(3, 3), dpi=80)
+        ax = fig.add_subplot(111)
+        ax.imshow(image[::-1,...])
+        ax.text(0, 0, str(label),
+          horizontalalignment="left",
+          verticalalignment="top")
+        fig.canvas.draw()
+
+        # Write the plot as a memory file.
+        buf = io.BytesIO()
+        data = fig.savefig(buf, format="png")
+        buf.seek(0)
+
+        # Read the image and convert to numpy array
+        img = PIL.Image.open(buf)
+        return np.array(img.getdata()).reshape(img.size[0], img.size[1], -1)
+
+    def _visualize_images(images, labels):
+        # Only display the given number of examples in the batch
+        outputs = []
+        for i in range(max_outputs):
+            output = _visualize_image(images[i], labels[i])
+            outputs.append(output)
+        return np.array(outputs, dtype=np.uint8)
+
+    # Run the python op.
+    figs = tf.py_func(_visualize_images, [images, labels], tf.uint8)
+    return tf.summary.image(name, figs)
+```
+
+请注意，由于摘要通常仅仅偶尔（不是每步）求值一次，因此可以在实践中使用此实现而不必担心效率。
+
+## 十、多 GPU 和数据并行
+
+如果您使用 C++ 等语言为单个 CPU 核心编写软件，并使其在多个 GPU 上并行运行，则需要从头开始重写软件。 但TensorFlow并非如此。 由于其象征性，TensorFlow 可以隐藏所有这些复杂性，使得无需在多个 CPU 和 GPU 上扩展程序。
+
+让我们以在 CPU 上相加两个向量的简单示例开始：
+
+```py
+ import tensorflow as tf
+
+with tf.device(tf.DeviceSpec(device_type="CPU", device_index=0)):
+    a = tf.random_uniform([1000, 100])
+    b = tf.random_uniform([1000, 100])
+    c = a + b
+
+tf.Session().run(c)
+```
+
+GPU 上可以做相同的事情：
+
+```py
+with tf.device(tf.DeviceSpec(device_type="GPU", device_index=0)):
+    a = tf.random_uniform([1000, 100])
+    b = tf.random_uniform([1000, 100])
+    c = a + b
+```
+
+但是，如果我们有两个 GPU 并且想要同时使用它们呢？ 为此，我们可以拆分数据并使用单独的 GPU 来处理每一半：
+
+```py
+split_a = tf.split(a, 2)
+split_b = tf.split(b, 2)
+
+split_c = []
+for i in range(2):
+    with tf.device(tf.DeviceSpec(device_type="GPU", device_index=i)):
+        split_c.append(split_a[i] + split_b[i])
+
+c = tf.concat(split_c, axis=0)
+```
+
+让我们以更一般的形式重写它，以便我们可以用任何其他操作替换加法：
+
+```py
+def make_parallel(fn, num_gpus, **kwargs):
+    in_splits = {}
+    for k, v in kwargs.items():
+        in_splits[k] = tf.split(v, num_gpus)
+
+    out_split = []
+    for i in range(num_gpus):
+        with tf.device(tf.DeviceSpec(device_type="GPU", device_index=i)):
+            with tf.variable_scope(tf.get_variable_scope(), reuse=i > 0):
+                out_split.append(fn(**{k : v[i] for k, v in in_splits.items()}))
+
+    return tf.concat(out_split, axis=0)
+
+
+def model(a, b):
+    return a + b
+
+c = make_parallel(model, 2, a=a, b=b)
+```
+
+您可以使用任何接受一组张量作为输入的函数替换模型，并在输入和输出都是批量的条件下，返回张量作为结果。请注意，我们还添加了一个变量作用域并将复用设置为`True`。这确保我们使用相同的变量来处理两个分割。在我们的下一个例子中，这将变得很方便。
+
+让我们看一个稍微更实际的例子。我们想在多个 GPU 上训练神经网络。在训练期间，我们不仅需要计算正向传播，还需要计算反向传播（梯度）。但是我们如何并行计算梯度呢？ 事实证明这很简单。
+
+回想一下第一个东西，我们想要将二次多项式拟合到一组样本。我们重新组织了一些代码，以便在模型函数中进行大量操作：
+
+```py
+import numpy as np
+import tensorflow as tf
+
+def model(x, y):
+    w = tf.get_variable("w", shape=[3, 1])
+
+    f = tf.stack([tf.square(x), x, tf.ones_like(x)], 1)
+    yhat = tf.squeeze(tf.matmul(f, w), 1)
+
+    loss = tf.square(yhat - y)
+    return loss
+
+x = tf.placeholder(tf.float32)
+y = tf.placeholder(tf.float32)
+
+loss = model(x, y)
+
+train_op = tf.train.AdamOptimizer(0.1).minimize(
+    tf.reduce_mean(loss))
+
+def generate_data():
+    x_val = np.random.uniform(-10.0, 10.0, size=100)
+    y_val = 5 * np.square(x_val) + 3
+    return x_val, y_val
+
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
+for _ in range(1000):
+    x_val, y_val = generate_data()
+    _, loss_val = sess.run([train_op, loss], {x: x_val, y: y_val})
+
+_, loss_val = sess.run([train_op, loss], {x: x_val, y: y_val})
+print(sess.run(tf.contrib.framework.get_variables_by_name("w")))
+```
+
+现在让我们使用我们刚刚编写的`make_parallel`来并行化它。我们只需要从上面的代码中更改两行代码：
+
+```py
+loss = make_parallel(model, 2, x=x, y=y)
+
+train_op = tf.train.AdamOptimizer(0.1).minimize(
+    tf.reduce_mean(loss),
+    colocate_gradients_with_ops=True)
+```
+
+为了更改为梯度的并行化反向传播，我们需要的唯一的东西是，将`colocate_gradients_with_ops`标志设置为`True`。这可确保梯度操作和原始操作在相同的设备上运行。
