@@ -2,10 +2,9 @@
 
 > 原文：[vahidk/EffectiveTensorflow](https://github.com/vahidk/EffectiveTensorflow)
 
-> 译者：[一译翻译组](https://yiyibooks.cn/wizard/effective-tf/index.html)、[飞龙](https://github.com/wizardforcel)
+> 译者：[FesianXu](https://my.csdn.net/loseinvain)、[飞龙](https://github.com/wizardforcel)
 
-> 
-协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## 一、TensorFlow 基础
 
