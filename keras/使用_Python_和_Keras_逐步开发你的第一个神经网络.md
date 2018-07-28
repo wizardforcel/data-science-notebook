@@ -1,4 +1,4 @@
-# Keras 系列教程：MLP
+# 使用 Python 和 Keras 逐步开发你的第一个神经网络
 
 > 原文：[Develop Your First Neural Network in Python With Keras Step-By-Step](https://machinelearningmastery.com/tutorial-first-neural-network-python-keras/)
 
