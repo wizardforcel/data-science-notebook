@@ -1,21 +1,21 @@
-# ͼǶ�����������⣬������Ӧ��
+# 图嵌入综述：问题，技术与应用
 
 ![](img/title.jpg)
 
-> ԭ�ģ�[A Comprehensive Survey of Graph Embedding: Problems, Techniques and Applications (arxiv 1709.07604)](https://arxiv.org/abs/1709.07604)
+> 原文：[A Comprehensive Survey of Graph Embedding: Problems, Techniques and Applications (arxiv 1709.07604)](https://arxiv.org/abs/1709.07604)
 
-> ���ߣ�[����](https://github.com/wizardforcel)
+> 译者：[飞龙](https://github.com/wizardforcel)
 
-> Э�飺[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+> 协议：[CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-> �Ժ��ز���[�ȸ跭��](https://translate.google.cn/)
+> 自豪地采用[谷歌翻译](https://translate.google.cn/)
 
-## ժҪ
+## 摘要
 
-ͼ��һ����Ҫ�����ݱ�ʾ�������ڸ��ָ�������ʵ�����С� ��Ч��ͼ����ʹ�û��ܹ���������˽����ݱ�������ݣ��Ӷ�����ʹ�������õ�Ӧ�����棬����ڵ���࣬�ڵ��Ƽ�������Ԥ��ȡ����ǣ������ͼ�����������������߼���Ϳռ�ɱ��� ͼǶ���ǽ��ͼ�����������Ч������ ����ͼ����ת��Ϊ��ά�ռ䣬�������̶ȵر�����ͼ�ṹ��Ϣ��ͼ���ԡ� �ڱ��������У����Ƕ�ͼǶ���е����׽�����ȫ��Ļعˡ� �������Ƚ���ͼǶ�����ʽ�����Լ���ظ�� ֮���������������ͼǶ����෨�����Ƕ�Ӧ�ڲ�ͬͼǶ�������趨�д��ڵ���ս���Լ����й�����������������н����Щ��ս�� ��������ܽ���ͼǶ���Ӧ�ã����ڼ���Ч�ʣ������趨��������Ӧ�ó�������������ĸ���ϣ����δ���о�����
+图是一种重要的数据表示，出现在各种各样的真实场景中。 有效的图分析使用户能够更深入地了解数据背后的内容，从而可以使许多有用的应用受益，例如节点分类，节点推荐，链接预测等。但是，大多数图分析方法都会遇到高计算和空间成本。 图嵌入是解决图分析问题的有效方法。 它将图数据转换为低维空间，其中最大程度地保留了图结构信息和图属性。 在本次综述中，我们对图嵌入中的文献进行了全面的回顾。 我们首先介绍图嵌入的正式定义以及相关概念。 之后，我们提出了两种图嵌入分类法，它们对应于不同图嵌入问题设定中存在的挑战，以及现有工作如何在其解决方案中解决这些挑战。 最后，我们总结了图嵌入的应用，并在计算效率，问题设定，技术和应用场景方面提出了四个有希望的未来研究方向。
 
-�ؼ��֣�ͼǶ�룬ͼ������ͼǶ������������Ƕ��
+关键字：图嵌入，图分析，图嵌入综述，网络嵌入
 
-## Ŀ¼
+## 目录
 
-+   [��һ������](1.md)
++   [第一、二章](1.md)
