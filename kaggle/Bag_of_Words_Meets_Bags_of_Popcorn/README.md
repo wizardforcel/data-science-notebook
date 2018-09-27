@@ -1,6 +1,4 @@
-# 当爆米花遇上词袋
-
-Kaggle word2vec NLP 官方教程
+# Kaggle word2vec NLP 教程
 
 > 原文：[Bag of Words Meets Bags of Popcorn](https://www.kaggle.com/c/word2vec-nlp-tutorial)
 > 
