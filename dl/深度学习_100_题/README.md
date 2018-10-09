@@ -116,13 +116,13 @@ B渔夫盯着鱼的重量，遍历鱼塘后该渔夫描绘了鱼塘的鱼重量�
 
 非严格意义上来讲，下图中红框框起来的部分便可以理解为一个滤波器，即带着一组固定权重的神经元。多个滤波器叠加便成了卷积层。
 
-![](https://img.hacpai.com/e/98aea1cf17d447fa8f8286ab749450dd.jpeg)
+![](img/98aea1cf17d447fa8f8286ab749450dd.jpeg)
 
 OK，举个具体的例子。比如下图中，图中左边部分是原始输入数据，图中中间部分是滤波器filter，图中右边是输出的新的二维数据。
 
-![](https://img.hacpai.com/e/28443a7f3cce47a3958547289f017f11.jpeg)
+![](img/28443a7f3cce47a3958547289f017f11.jpeg)
 
-![](https://img.hacpai.com/e/f8ebbd9c386f4e25b170f2d1a1632c9e.jpeg)
+![](img/f8ebbd9c386f4e25b170f2d1a1632c9e.jpeg)
 
 中间滤波器filter与数据窗口做内积，其具体计算过程则是：4\*0 + 0\*0 + 0\*0 + 0\*0 + 0\*1 + 0\*1 + 0\*0 + 0\*1 + -4\*2 = -8
 
@@ -132,7 +132,7 @@ OK，举个具体的例子。比如下图中，图中左边部分是原始输入
 
 池化，简言之，即取区域平均或最大，如下图所示（图引自cs231n）
 
-![](https://img.hacpai.com/e/ede89985091e4ea891302f14c8d59495.jpeg)
+![](img/ede89985091e4ea891302f14c8d59495.jpeg)
 
 上图所展示的是取区域最大，即上图左边部分中 左上角2x2的矩阵中6最大，右上角2x2的矩阵中8最大，左下角2x2的矩阵中3最大，右下角2x2的矩阵中4最大，所以得到上图右边部分的结果：6 8 3 4。
 
@@ -144,11 +144,11 @@ GAN之所以是对抗的，是因为GAN的内部是竞争关系，一方叫gener
 
 更直白的讲，将generator想象成假币制造商，而discriminator是警察。generator目的是尽可能把假币造的跟真的一样，从而能够骗过discriminator，即生成样本并使它看上去好像来自于真实训练样本一样。
 
-![](https://img.hacpai.com/e/200a8082bed943dd83db8b251821fbb4.jpeg)
+![](img/200a8082bed943dd83db8b251821fbb4.jpeg)
 
 如下图中的左右两个场景：
 
-![](https://img.hacpai.com/e/920891b2f82942d09da73cc3cabb51b3.jpeg)
+![](img/920891b2f82942d09da73cc3cabb51b3.jpeg)
 
 更多请参见此课程：《生成对抗网络班》（链接：[https://www.julyedu.com/course/getDetail/83](https://link.zhihu.com/?target=https%3A//www.julyedu.com/course/getDetail/83)）
 
@@ -168,9 +168,9 @@ Tensorflow是一个通过计算图的形式来表述计算的编程系统，计�
 
 a=x\*y; b=a+z; c=tf.reduce\_sum(b);
 
-![](https://img.hacpai.com/e/601e6bf7bc7c47e68f79f0fb8cf7884f.jpeg)
+![](img/601e6bf7bc7c47e68f79f0fb8cf7884f.jpeg)
 
-![](https://img.hacpai.com/e/b1556de5fec04615867af658d4f42bda.jpeg)
+![](img/b1556de5fec04615867af658d4f42bda.jpeg)
 
 ## 12、你有哪些deep learning（rnn、cnn）调参的经验？
 
@@ -262,13 +262,13 @@ The Unreasonable Effectiveness of Deep Learning -LeCun 16 NIPS Keynote
 
 以上几个不相关问题的相关性在于，都存在局部与整体的关系，由低层次的特征经过组合，组成高层次的特征，并且得到不同特征之间的空间相关性。如下图：低层次的直线／曲线等特征，组合成为不同的形状，最后得到汽车的表示。
 
-![](https://img.hacpai.com/e/9e09a99bb5434718b3d9600e945ab3d8.jpeg)
+![](img/9e09a99bb5434718b3d9600e945ab3d8.jpeg)
 
 CNN抓住此共性的手段主要有四个：局部连接／权值共享／池化操作／多层次结构。
 
 局部连接使网络可以提取数据的局部特征；权值共享大大降低了网络的训练难度，一个Filter只提取一个特征，在整个图片（或者语音／文本） 中进行卷积；池化操作与多层次结构一起，实现了数据的降维，将低层次的局部特征组合成为较高层次的特征，从而对整个图片进行表示。如下图：
 
-![](https://img.hacpai.com/e/18d522717c974d9aac99b68177f092cf.jpeg)
+![](img/18d522717c974d9aac99b68177f092cf.jpeg)
 
 上图中，如果每一个点的处理使用相同的Filter，则为全卷积，如果使用不同的Filter，则为Local-Conv。
 
@@ -284,11 +284,11 @@ CNN抓住此共性的手段主要有四个：局部连接／权值共享／池�
 
 sigmoid、Tanh、ReLU的缺点在121问题中已有说明，为了解决ReLU的dead cell的情况，发明了Leaky Relu， 即在输入小于0时不让输出为0，而是乘以一个较小的系数，从而保证有导数存在。同样的目的，还有一个ELU，函数示意图如下。
 
-![](https://img.hacpai.com/e/bb05decb9e2e44d580682a0feec39db2.jpeg)
+![](img/bb05decb9e2e44d580682a0feec39db2.jpeg)
 
 还有一个激活函数是Maxout，即使用两套w,b参数，输出较大值。本质上Maxout可以看做Relu的泛化版本，因为如果一套w,b全都是0的话，那么就是普通的ReLU。Maxout可以克服Relu的缺点，但是参数数目翻倍。
 
-![](https://img.hacpai.com/e/2b4627175c78418f9677cb12452f6b46.jpeg)
+![](img/2b4627175c78418f9677cb12452f6b46.jpeg)
 
 **资料来源：**  
 
@@ -318,7 +318,7 @@ sigmoid、Tanh、ReLU的缺点在121问题中已有说明，为了解决ReLU的d
 
 下图可以很形象的解释这个问题，左图用一根线是无法划分的。经过一系列变换后，就变成线性可解的问题了。
 
-![](https://img.hacpai.com/e/01d3c1f3e2734ac096645fb628b8b382.jpeg)
+![](img/01d3c1f3e2734ac096645fb628b8b382.jpeg)
 
 如果不用激励函数（其实相当于激励函数是f(x) = x），在这种情况下你每一层输出都是上层输入的线性函数，很容易验证，无论你神经网络有多少层，输出都是输入的线性组合，与没有隐藏层效果相当，这种情况就是最原始的感知机（Perceptron）了。
 
@@ -330,7 +330,7 @@ sigmoid、Tanh、ReLU的缺点在121问题中已有说明，为了解决ReLU的d
 
 先看sigmoid、tanh和RelU的函数图：
 
-![](https://img.hacpai.com/e/acebaf90ff3f4872b6109d8c117a0d81.jpeg)
+![](img/acebaf90ff3f4872b6109d8c117a0d81.jpeg)
 
 第一，采用sigmoid等函数，算激活函数时（指数运算），计算量大，反向传播求误差梯度时，求导涉及除法和指数运算，计算量相对大，而采用Relu激活函数，整个过程的计算量节省很多。
 
@@ -346,7 +346,7 @@ sigmoid、Tanh、ReLU的缺点在121问题中已有说明，为了解决ReLU的d
 
 ## 18、为什么LSTM模型中既存在sigmoid又存在tanh两种激活函数，而不是选择统一一种sigmoid或者tanh？这样做的目的是什么？
 
-![](https://img.hacpai.com/e/044f240c4ebc4d9b8e1ea5e78d6f2325.jpeg)
+![](img/044f240c4ebc4d9b8e1ea5e78d6f2325.jpeg)
 
 解析：
 
@@ -366,17 +366,17 @@ tanh 用在了状态和输出上，是对数据的处理，这个用其他激活
 
 算法：当梯度爆炸时截断梯度（伪代码）
 
-![](https://img.hacpai.com/e/bf44a17dd7f34a4bb9833ec2b7576bdd.jpeg)
+![](img/bf44a17dd7f34a4bb9833ec2b7576bdd.jpeg)
 
 下图可视化了梯度截断的效果。它展示了一个小的rnn（其中W为权值矩阵，b为bias项）的决策面。这个模型是一个一小段时间的rnn单元组成；实心箭头表明每步梯度下降的训练过程。当梯度下降过程中，模型的目标函数取得了较高的误差时，梯度将被送到远离决策面的位置。截断模型产生了一个虚线，它将误差梯度拉回到离原始梯度接近的位置。
 
-![](https://img.hacpai.com/e/4216de73838e4d34a2e44da2ad786718.jpeg)
+![](img/4216de73838e4d34a2e44da2ad786718.jpeg)
 
 梯度爆炸，梯度截断可视化
 
 为了解决梯度弥散的问题，我们介绍了两种方法。第一种方法是将随机初始化
 
-![](https://img.hacpai.com/e/17bbb8adc5e845e7bf84835e68be4c28.jpeg)
+![](img/17bbb8adc5e845e7bf84835e68be4c28.jpeg)
 
 改为一个有关联的矩阵初始化。第二种方法是使用ReLU（Rectified Linear Units）代替sigmoid函数。ReLU的导数不是0就是1.因此，神经元的梯度将始终为1，而不会当梯度传播了一定时间之后变小。  
 
@@ -402,7 +402,7 @@ A Statistical View of Deep Learning (I): Recursive GLMs
 
 下图是一个对照表：
 
-![](https://img.hacpai.com/e/237042823fe04727a3d359ff5a5065b1.jpeg)
+![](img/237042823fe04727a3d359ff5a5065b1.jpeg)
 
 ## 22、如何解决梯度消失和梯度膨胀？
 
@@ -534,11 +534,11 @@ WGAN对梯度的clip有问题，于是有了WGAN-GP。
 
 很多人都有一种看法，就是“局部最优是神经网络优化的主要难点”。这来源于一维优化问题的直观想象。在单变量的情形下，优化问题最直观的困难就是有很多局部极值，如
 
-![](https://img.hacpai.com/e/373d350c50a345d7a36a4c1f44479fb9.jpeg)
+![](img/373d350c50a345d7a36a4c1f44479fb9.jpeg)
 
 　　人们直观的想象，高维的时候这样的局部极值会更多，指数级的增加，于是优化到全局最优就更难了。然而单变量到多变量一个重要差异是，单变量的时候，Hessian矩阵只有一个特征值，于是无论这个特征值的符号正负，一个临界点都是局部极值。但是在多变量的时候，Hessian有多个不同的特征值，这时候各个特征值就可能会有更复杂的分布，如有正有负的不定型和有多个退化特征值（零特征值）的半定型
 
-![](https://img.hacpai.com/e/835339d09d50476cafb63d84cfd2569e.jpeg)
+![](img/835339d09d50476cafb63d84cfd2569e.jpeg)
 
 　　在后两种情况下，是很难找到局部极值的，更别说全局最优了。
 
@@ -560,7 +560,7 @@ For the landscape of loss function for deep networks, the volume of basin of att
 
 解析：
 
-![](https://img.hacpai.com/e/786533b5e4454aa5a5a84cd24ccef6b7.jpeg)
+![](img/786533b5e4454aa5a5a84cd24ccef6b7.jpeg)
 
 ## 29、为什么很多做人脸的Paper会最后加入一个Local Connected Conv？
 
@@ -568,7 +568,7 @@ For the landscape of loss function for deep networks, the volume of basin of att
 
 以FaceBook DeepFace 为例：
 
-![](https://img.hacpai.com/e/da6bbbc2ed464849b0e1f458228bf7d2.jpeg)
+![](img/da6bbbc2ed464849b0e1f458228bf7d2.jpeg)
 
 DeepFace 先进行了两次全卷积＋一次池化，提取了低层次的边缘／纹理等特征。后接了3个Local-Conv层，这里是用Local-Conv的原因是，人脸在不同的区域存在不同的特征（眼睛／鼻子／嘴的分布位置相对固定），当不存在全局的局部特征分布时，Local-Conv更适合特征的提取。
 
@@ -730,7 +730,7 @@ Recurrent 将其扩展到了序列对序列 sequence-to-sequence mapping.
 
 但单个向量也可以视为长度为1的序列。所以有下图几种类型：
 
-![](https://img.hacpai.com/e/f9b8aeb4296942369cf3cb9efccabae3.jpeg)
+![](img/f9b8aeb4296942369cf3cb9efccabae3.jpeg)
 
 除了最左侧的one to one是feedforward 能做的，右侧都是Recurrent所扩展的
 
@@ -752,11 +752,11 @@ RNNs之所以称为循环神经网路，即一个序列当前的输出与前面�
 
 理论上，RNNs能够对任何长度的序列数据进行处理。但是在实践中，为了降低复杂性往往假设当前的状态只与前面的几个状态相关，下图便是一个典型的RNNs：
 
-![](https://img.hacpai.com/e/48aaf3f4c0e94f26a90ec91573e46738.jpeg)
+![](img/48aaf3f4c0e94f26a90ec91573e46738.jpeg)
 
 RNNs包含输入单元(Input units)，输入集标记为{x0,x1,...,xt,xt+1,...}，而输出单元(Output units)的输出集则被标记为{y0,y1,...,yt,yt+1.,..}。RNNs还包含隐藏单元(Hidden units)，我们将其输出集标记为{s0,s1,...,st,st+1,...}，这些隐藏单元完成了最为主要的工作。你会发现，在图中：有一条单向流动的信息流是从输入单元到达隐藏单元的，与此同时另一条单向流动的信息流从隐藏单元到达输出单元。在某些情况下，RNNs会打破后者的限制，引导信息从输出单元返回隐藏单元，这些被称为“Back Projections”，并且隐藏层的输入还包括上一隐藏层的状态，即隐藏层内的节点可以自连也可以互连。
 
-![](https://img.hacpai.com/e/dad3b0a7e0f24ca9aa1ebac33de04988.jpeg)
+![](img/dad3b0a7e0f24ca9aa1ebac33de04988.jpeg)
 
 上图将循环神经网络进行展开成一个全神经网络。例如，对一个包含5个单词的语句，那么展开的网络便是一个五层的神经网络，每一层代表一个单词。对于该网络的计算过程如下：
 
@@ -784,13 +784,13 @@ RNNs包含输入单元(Input units)，输入集标记为{x0,x1,...,xt,xt+1,...}�
 
 sigmoid的函数表达式如下
 
-![](https://img.hacpai.com/e/10432bb4844e4e4ba2f5ff29421f46e1.jpeg)
+![](img/10432bb4844e4e4ba2f5ff29421f46e1.jpeg)
 
 其中z是一个线性组合，比如z可以等于：b + w1\*x1 + w2\*x2。通过代入很大的正数或很小的负数到g(z)函数中可知，其结果趋近于0或1。  
 
 因此，sigmoid函数g(z)的图形表示如下（ 横轴表示定义域z，纵轴表示值域g(z) ）：
 
-![](https://img.hacpai.com/e/74defa6e1c494292bc4db925bc35b6f4.jpeg)
+![](img/74defa6e1c494292bc4db925bc35b6f4.jpeg)
 
 也就是说，sigmoid函数的功能是相当于把一个实数压缩至0到1之间。当z是非常大的正数时，g(z)会趋近于1，而z是非常小的负数时，则g(z)会趋近于0。  
 
@@ -798,11 +798,11 @@ sigmoid的函数表达式如下
 
 举个例子，如下图（图引自Stanford机器学习公开课）
 
-![](https://img.hacpai.com/e/abb75c5177f84329a975b7b783d1d0c1.jpeg)
+![](img/abb75c5177f84329a975b7b783d1d0c1.jpeg)
 
 z = b + w1\*x1 + w2\*x2，其中b为偏置项 假定取-30，w1、w2都取为20  
 
-![](https://img.hacpai.com/e/478263c8d4b941baaa25ce732979673d.jpeg)
+![](img/478263c8d4b941baaa25ce732979673d.jpeg)
 
 如果x1 = 0，x2 = 0，则z = -30，g(z) = 1/( 1 + e^-z )趋近于0。此外，从上图sigmoid函数的图形上也可以看出，当z=-30的时候，g(z)的值趋近于0
 
@@ -932,15 +932,15 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 方法：我们将在 50 个数据点 (x,y) 上训练一个 1 层神经网络，这些数据点从域 \[-1,1\] 上的以下函数中绘制，所得拟合的均方误差（mean square error，MSE）。我们将尝试以下函数（你可随时通过更改以下代码来尝试自己的函数。）
 
-![](https://img.hacpai.com/e/31d31c9d400743f9b2bb420efa157431.jpeg)
+![](img/31d31c9d400743f9b2bb420efa157431.jpeg)
 
 假设： 随着隐藏层中单位的数量增加，所得拟合的正确率（Accuracy）将会增加（误差将会减少）。
 
-![](https://img.hacpai.com/e/ee876f21b0cb430e8d2835c4d1e34a21.jpeg)
+![](img/ee876f21b0cb430e8d2835c4d1e34a21.jpeg)
 
 运行实验所需的时间： 91.595 s
 
-![](https://img.hacpai.com/e/9ef159838efb41b2bda2605b50ae3374.jpeg)
+![](img/9ef159838efb41b2bda2605b50ae3374.jpeg)
 
 结论： 随着隐藏单位数量的增加，训练数据的逼近误差一般会减小。
 
@@ -962,11 +962,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设： 随着具有固定数量参数的神经网络中层数的增加，困难的分类问题的正确率将得到提高。
 
-![](https://img.hacpai.com/e/ab100e7bfd644f0897d14b6cf3f5b8ca.jpeg)
+![](img/ab100e7bfd644f0897d14b6cf3f5b8ca.jpeg)
 
 运行实验所需的时间： 28.688 s
 
-![](https://img.hacpai.com/e/c947ec9172164ac1a8edad51d93abb2c.jpeg)
+![](img/c947ec9172164ac1a8edad51d93abb2c.jpeg)
 
 此处，红点和蓝点代表属于不同类别的点。黑色的虚线表示最接近神经网络学习的训练数据近似值（若神经网络分配的分数大于零，则被预测为红点；否则，被预测为蓝点）。零线显示为黑色。
 
@@ -984,11 +984,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设： 随着数据集大小的增加，所有技术方法的测试正确率都会提高，但深度模型的正确率会比非深度模型的正确率要高。我们进一步预计非深度学习技术的正确率将更快地饱和。
 
-![](https://img.hacpai.com/e/bc042f10b289425aabdd380ef04de3ed.jpeg)
+![](img/bc042f10b289425aabdd380ef04de3ed.jpeg)
 
 运行实验所需的时间： 138.239 s
 
-![](https://img.hacpai.com/e/10f4ed00e2ed469d844bdc8331facdd1.jpeg)
+![](img/10f4ed00e2ed469d844bdc8331facdd1.jpeg)
 
 结论： 神经网络在数据集大小方面上表现始终优于 SVM 和随机森林。随着数据集大小的增加，性能上的差距也随之增加，至少在神经网络的正确率开始饱和之前，这表明神经网络更有效地利用了不断增加的数据集。然而，如果有足够的数据，即使是 SVM 也会有可观的正确率。深度网络比浅层网络的表现更好。
 
@@ -1004,11 +1004,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设：我们预计测试正确率会随着类别不平衡的增加而降低，但我们预计过采样可以缓解这个问题。
 
-![](https://img.hacpai.com/e/294feabe2c814b4f826fa9528db78757.jpeg)
+![](img/294feabe2c814b4f826fa9528db78757.jpeg)
 
 运行实验所需的时间： 392.157 s
 
-![](https://img.hacpai.com/e/571436d4db2b49148c7f47ba9d0733c5.jpeg)
+![](img/571436d4db2b49148c7f47ba9d0733c5.jpeg)
 
 最下面的四张图显示了连同训练点（左）或测试点（右）绘制的决策边界的数量。第一行显示没有重采样法的结果，底部显示了使用重采样法的结果。
 
@@ -1028,11 +1028,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设： 我们预计，对随机标签而言，训练应该耗费更长的时间。而真正标签则不然。
 
-![](https://img.hacpai.com/e/d3a0723c2afb43b6b28e3d4154a207d9.jpeg)
+![](img/d3a0723c2afb43b6b28e3d4154a207d9.jpeg)
 
 运行实验所需的时间： 432.275 s
 
-![](https://img.hacpai.com/e/40ea5077c9f24110abcf399fe8be542c.jpeg)
+![](img/40ea5077c9f24110abcf399fe8be542c.jpeg)
 
 结论： 神经网络的记忆能力约为 150 个训练点。但即便如此，神经网络也需要更长的时间来学习随机标签，而不是真实值（ground truth）标签。
 
@@ -1050,11 +1050,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设：我们预计 PCA 将会有所帮助，因为变异最多的方向（可能）与最有利于分类的方向相一致。
 
-![](https://img.hacpai.com/e/5d848274a158460ba56d4f3473e8ae0a.jpeg)
+![](img/5d848274a158460ba56d4f3473e8ae0a.jpeg)
 
 运行实验所需的时间： 182.938 s
 
-![](https://img.hacpai.com/e/6d438c73742d466ca800a83d9885cd2c.jpeg)
+![](img/6d438c73742d466ca800a83d9885cd2c.jpeg)
 
 结论： 当维度非常大时，无监督的 PCA 步骤可以显著改善下游分类。
 
@@ -1068,15 +1068,15 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 方法：我们生成著名的二维卫星数据集，并训练一个具有两个隐藏层的神经网络来学习对数据集进行分类。我们尝试了六种不同的激活函数。
 
-![](https://img.hacpai.com/e/5b998395ea4849c680497605dca867ff.jpeg)
+![](img/5b998395ea4849c680497605dca867ff.jpeg)
 
 假设：我们预计恒等函数执行很差（因为直到最后一个 softmax 层，网络仍然保持相当的线性）。我们可能会进一步期望标准的激活函数能够发挥最好的效果。
 
-![](https://img.hacpai.com/e/9540565bbfa048d19be41733f4050a10.jpeg)
+![](img/9540565bbfa048d19be41733f4050a10.jpeg)
 
 运行实验所需的时间: 22.745 s
 
-![](https://img.hacpai.com/e/fbf7629a8dc245bebf9646280b6485c4.jpeg)
+![](img/fbf7629a8dc245bebf9646280b6485c4.jpeg)
 
 结论：除去 sign(x) 外，所有的非线性激活函数对分类任务都是非常有效的。
 
@@ -1106,11 +1106,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设： 我们预计交叉熵损失函数作为分类任务的标准损失函数，表现最好，同时我们预计其他损失函数表现不佳。
 
-![](https://img.hacpai.com/e/be26a56b1542415a943884dcc34ba6e7.jpeg)
+![](img/be26a56b1542415a943884dcc34ba6e7.jpeg)
 
 运行实验所需的时间： 36.652 s
 
-![](https://img.hacpai.com/e/a534357c0d06465a96e490e77c17f6bb.jpeg)
+![](img/a534357c0d06465a96e490e77c17f6bb.jpeg)
 
 结论： 除去阴性对照外，所有的损失都有类似的表现。损失函数是标签与逻辑之间的区别，提升到四次幂，其性能要比其他差一些。
 
@@ -1124,11 +1124,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设：我们期望 Xavier 损失具有最好的性能（它是 tensorflow 中使用的默认值），而其他方法性能不佳（尤其是不断的初始化）。
 
-![](https://img.hacpai.com/e/601e40b1d39049e89ac3222526c714e3.jpeg)
+![](img/601e40b1d39049e89ac3222526c714e3.jpeg)
 
 运行实验所需的时间： 34.137 s
 
-![](https://img.hacpai.com/e/d1e1afb6df914096bf96ecb12ba5dec5.jpeg)
+![](img/d1e1afb6df914096bf96ecb12ba5dec5.jpeg)
 
 结论：Xavier 和高斯（具有较低的方差）初始化会得到很好的训练。有趣的是，常数 0 的初始化最终导致训练，而其他初始化并不会。
 
@@ -1144,7 +1144,7 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 假设： 我们期望后一层的权重会更快地收敛，因为它们在整个网络中进行反向传播时，后期阶段的变化会被放大。
 
-![](https://img.hacpai.com/e/64bc01834f1e4b879610055a22c399ef.jpeg)
+![](img/64bc01834f1e4b879610055a22c399ef.jpeg)
 
 运行实验所需的时间： 3.924 s
 
@@ -1164,7 +1164,7 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 运行实验所需的时间： 17.761 s
 
-![](https://img.hacpai.com/e/df2c711b9dac4f73816da43ea48f20ab.jpeg)
+![](img/df2c711b9dac4f73816da43ea48f20ab.jpeg)
 
 结论：我们注意到正则化确实降低了权重的大小，在强 L1 正则化的情况下导致了稀疏性。对正确率带来什么样的影响尚未清楚。
 
@@ -1214,11 +1214,11 @@ GRU只有两个门（update和reset），LSTM有三个门（forget，input，out
 
 举个例子，下面是一张原图
 
-![](https://img.hacpai.com/e/f44a392f9acd449dac3e4251bfdb4d6a.jpeg)
+![](img/f44a392f9acd449dac3e4251bfdb4d6a.jpeg)
 
 然后我们对其做下目标检测，其DR = DetectionResult，GT = GroundTruth。
 
-![](https://img.hacpai.com/e/c5c91c08e41a48fbac9accf8aa3e4951.jpeg)
+![](img/c5c91c08e41a48fbac9accf8aa3e4951.jpeg)
 
 黄色边框框起来的是：
 
@@ -1250,7 +1250,7 @@ DR⋃GT
 
 如图1所示，绿色的框表示真实值Ground Truth, 红色的框为Selective Search提取的候选区域/框Region Proposal。那么即便红色的框被分类器识别为飞机，但是由于红色的框定位不准(IoU<0.5)， 这张图也相当于没有正确的检测出飞机。
 
-![](https://img.hacpai.com/e/4dbb0258b1954bdabf2b3edce47b994a.jpeg)
+![](img/4dbb0258b1954bdabf2b3edce47b994a.jpeg)
 
 如果我们能对红色的框进行微调fine-tuning，使得经过微调后的窗口跟Ground Truth 更接近， 这样岂不是定位会更准确。 而Bounding-box regression 就是用来微调这个窗口的。
 
@@ -1258,7 +1258,7 @@ DR⋃GT
 
 对于窗口一般使用四维向量(x,y,w,h)(x,y,w,h) 来表示， 分别表示窗口的中心点坐标和宽高。 对于图2, 红色的框 P 代表原始的Proposal, 绿色的框 G 代表目标的 Ground Truth， 我们的目标是寻找一种关系使得输入原始的窗口 P 经过映射得到一个跟真实窗口 G 更接近的回归窗口G^。
 
-![](https://img.hacpai.com/e/f73f1d879d364ff68e1d6a96207389a1.jpeg)
+![](img/f73f1d879d364ff68e1d6a96207389a1.jpeg)
 
 所以，边框回归的目的即是：给定(Px,Py,Pw,Ph)寻找一种映射f， 使得f(Px,Py,Pw,Ph)=(Gx^,Gy^,Gw^,Gh^)并且(Gx^,Gy^,Gw^,Gh^)≈(Gx,Gy,Gw,Gh)
 
@@ -1372,7 +1372,7 @@ R-CNN会从一张图片中找出n个可能是物体的矩形框，然后为每�
 
 fast rcnn 使用3种尺度和3种长宽比（1:1；1:2；2:1），则在每一个滑动位置就有 3\*3 = 9 个anchor。
 
-![](https://img.hacpai.com/e/45501d84d6514fd5ae93fd95dcd41f47.jpeg)
+![](img/45501d84d6514fd5ae93fd95dcd41f47.jpeg)
 
 ## 60题
 
@@ -1412,7 +1412,7 @@ CNN使用范围是具有局部空间相关性的数据，比如图像，自然�
 
 解析：
 
-![](https://img.hacpai.com/e/2ceaf204e1e7430a9eedcd80dfc28933.jpeg)
+![](img/2ceaf204e1e7430a9eedcd80dfc28933.jpeg)
 
 ## 63题
 
@@ -1422,23 +1422,23 @@ CNN使用范围是具有局部空间相关性的数据，比如图像，自然�
 
 链式法则或链锁定则（英语：chain rule），是求复合函数导数的一个法则。设f和g为两个关于x的可导函数，则复合函数
 
-![](https://img.hacpai.com/e/c3fc2aff06b34ea9b97f8a8538b0713b.jpeg)
+![](img/c3fc2aff06b34ea9b97f8a8538b0713b.jpeg)
 
 的导数
 
-![](https://img.hacpai.com/e/7227e94f7bfc479c835f1d02b8f77848.jpeg)
+![](img/7227e94f7bfc479c835f1d02b8f77848.jpeg)
 
 为
 
-![](https://img.hacpai.com/e/8474177f8e24423f88834be3aca80c9d.jpeg)
+![](img/8474177f8e24423f88834be3aca80c9d.jpeg)
 
 以下是一个简单的例子
 
-![](https://img.hacpai.com/e/5569533488e14ed2859c70165f460eea.jpeg)
+![](img/5569533488e14ed2859c70165f460eea.jpeg)
 
 以下的简单的一个证明
 
-![](https://img.hacpai.com/e/be592672ea6045d99183f600042a759f.jpeg)
+![](img/be592672ea6045d99183f600042a759f.jpeg)
 
 ## 64题
 
@@ -1490,11 +1490,11 @@ CNN使用范围是具有局部空间相关性的数据，比如图像，自然�
 
 如果使用 像 tanh 的激励函数, Wx 的激活值就变成了 ~0.1 和 ~1, 接近于 1 的部已经处在了 激励函数的饱和阶段, 也就是如果 x 无论再怎么扩大, tanh 激励函数输出值也还是 接近1。
 
-![](https://img.hacpai.com/e/87dd5af195e5407f87d9e1f377661fa2.jpeg)
+![](img/87dd5af195e5407f87d9e1f377661fa2.jpeg)
 
 换句话说, 神经网络在初始阶段已经不对那些比较大的 x 特征范围 敏感了. 这样很糟糕, 想象我轻轻拍自己的感觉和重重打自己的感觉居然没什么差别, 这就证明我的感官系统失效了. 当然我们是可以用之前提到的对数据做 normalization 预处理, 使得输入的 x 变化范围不会太大, 让输入值经过激励函数的敏感部分. 但刚刚这个不敏感问题不仅仅发生在神经网络的输入层, 而且在隐藏层中也经常会发生。
 
-![](https://img.hacpai.com/e/d48c6d980a6c42f49e3d84e706aa32bf.jpeg)
+![](img/d48c6d980a6c42f49e3d84e706aa32bf.jpeg)
 
 既然 x 换到了隐藏层当中, 我们能不能对隐藏层的输入结果进行像之前那样的normalization 处理呢? 答案是可以的, 因为大牛们发明了一种技术, 叫做 batch normalization, 正是处理这种情况。
 
@@ -1506,11 +1506,11 @@ Batch Normalization由Google提出在这篇论文中《Batch Normalization Accel
 
 归一化公式：
 
-![](https://img.hacpai.com/e/d2a38794de294b6da261d0cc17c9f2ad.jpeg)
+![](img/d2a38794de294b6da261d0cc17c9f2ad.jpeg)
 
 以下是Normalization过程（引用Google论文中的解释）：
 
-![](https://img.hacpai.com/e/cb78ab75cb0343d7afde1cd12766f0de.jpeg)
+![](img/cb78ab75cb0343d7afde1cd12766f0de.jpeg)
 
 输入：输入数据x1..xm（这些数据是准备进入激活函数的数据）
 
@@ -1534,7 +1534,7 @@ How to BN？
 
 在反向传播的时候，通过链式求导方式，修正γ与β以及相关权值
 
-![](https://img.hacpai.com/e/4a8550697c6a4fe6a806c4114d72d5f1.jpeg)
+![](img/4a8550697c6a4fe6a806c4114d72d5f1.jpeg)
 
 Why is BN？
 
@@ -1544,15 +1544,15 @@ Why is BN？
 
 关于梯度消失，以sigmoid函数为例子，sigmoid函数使得输出在\[0,1\]之间。
 
-![](https://img.hacpai.com/e/470a8783462d47fe840e949b44f690b8.jpeg)
+![](img/470a8783462d47fe840e949b44f690b8.jpeg)
 
 事实上x到了一定大小，经过sigmoid函数的输出范围就很小了，参考下图
 
-![](https://img.hacpai.com/e/7bfda32cdba949478f9cd65ad9ac94cc.jpeg)
+![](img/7bfda32cdba949478f9cd65ad9ac94cc.jpeg)
 
 如果输入很大，其对应的斜率就很小，我们知道，其斜率（梯度）在反向传播中是权值学习速率。所以就会出现如下的问题
 
-![](https://img.hacpai.com/e/79bb290c4aa94db69f4691e21c251963.jpeg)
+![](img/79bb290c4aa94db69f4691e21c251963.jpeg)
 
 在深度网络中，如果网络的激活输出很大，其梯度就很小，学习速率就很慢。假设每层学习梯度都小于最大值0.25，网络有n层，因为链式求导的原因，第一层的梯度小于0.25的n次方，所以学习速率就慢，对于最后一层只需对自身求导1次，梯度就大，学习速率就快。
 
@@ -1576,7 +1576,7 @@ b. 引入随机因素，即便陷入局部极小，梯度也可能不为0，这�
 
 ## 66、下图是一个利用sigmoid函数作为激活函数的含四个隐藏层的神经网络训练的梯度下降图。这个神经网络遇到了梯度消失的问题。下面哪个叙述是正确的？
 
-![](https://img.hacpai.com/e/c19a3b46cb744a73aba2b5e26f935a17.jpeg)
+![](img/c19a3b46cb744a73aba2b5e26f935a17.jpeg)
 
 **A**、第一隐藏层对应D，第二隐藏层对应C，第三隐藏层对应B，第四隐藏层对应A
 
@@ -1790,11 +1790,11 @@ D、以上都不正确的
 
 ## 75、神经网络模型（Neural Network）因受人类大脑的启发而得名
 
-![](https://img.hacpai.com/e/b660b5a5fd21470998aed602bc84e3a4.jpeg)
+![](img/b660b5a5fd21470998aed602bc84e3a4.jpeg)
 
 神经网络由许多神经元（Neuron）组成，每个神经元接受一个输入，对输入进行处理后给出一个输出，如下图所示。请问下列关于神经元的描述中，哪一项是正确的？
 
-![](https://img.hacpai.com/e/1ebb2a1bbc514399b8c0e1440ccc9c86.jpeg)
+![](img/1ebb2a1bbc514399b8c0e1440ccc9c86.jpeg)
 
 A、 每个神经元可以有一个输入和一个输出  
 
@@ -1830,23 +1830,23 @@ E、 上述都正确
 
 下图所示的网络用于训练识别字符H和T，如下所示
 
-![](https://img.hacpai.com/e/4e845ab031f54096b4fa4d2b66d029f1.jpeg)
+![](img/4e845ab031f54096b4fa4d2b66d029f1.jpeg)
 
 A、
 
-![](https://img.hacpai.com/e/6ca0fb53d0dc4a6ebe111b29363b9467.jpeg)
+![](img/6ca0fb53d0dc4a6ebe111b29363b9467.jpeg)
 
   
 
 B、
 
-![](https://img.hacpai.com/e/3bff56564f2747779c026097783a8f4e.jpeg)
+![](img/3bff56564f2747779c026097783a8f4e.jpeg)
 
   
 
 C、
 
-![](https://img.hacpai.com/e/e6eba2db1ee94444a668443a17bd0acc.jpeg)
+![](img/e6eba2db1ee94444a668443a17bd0acc.jpeg)
 
   
 
@@ -1964,7 +1964,7 @@ D、y = 2x
 
 ## 82、假设我们有一个如下图所示的隐藏层。隐藏层在这个网络中起到了一定的降纬作用。假如现在我们用另一种维度下降的方法，比如说主成分分析法(PCA)来替代这个隐藏层。
 
-![](https://img.hacpai.com/e/b513efbf6ab94b3097bfe7fcd727eb53.jpeg)
+![](img/b513efbf6ab94b3097bfe7fcd727eb53.jpeg)
 
 那么，这两者的输出效果是一样的吗？
 
@@ -1980,7 +1980,7 @@ PCA 提取的是数据分布方差比较大的方向，隐藏层可以提取有�
 
 ## 83、下图显示了训练过的3层卷积神经网络准确度，与参数数量(特征核的数量)的关系。
 
-![](https://img.hacpai.com/e/1f9d59aecc3548a8b2b2d5939e3c177b.jpeg)
+![](img/1f9d59aecc3548a8b2b2d5939e3c177b.jpeg)
 
 从图中趋势可见，如果增加神经网络的宽度，精确度会增加到一个特定阈值后，便开始降低。造成这一现象的可能原因是什么？
 
@@ -2002,15 +2002,15 @@ D、以上都不正确
 
 A、
 
-![](https://img.hacpai.com/e/b231bec601c348329858b2b5c6c78c78.jpeg)
+![](img/b231bec601c348329858b2b5c6c78c78.jpeg)
 
 B、
 
-![](https://img.hacpai.com/e/d21501d398a746c5b1bdaa02e27486ea.jpeg)
+![](img/d21501d398a746c5b1bdaa02e27486ea.jpeg)
 
 C、
 
-![](https://img.hacpai.com/e/5025dae1b5c94900b236fad22861181b.jpeg)
+![](img/5025dae1b5c94900b236fad22861181b.jpeg)
 
 正确答案是：B
 
@@ -2052,7 +2052,7 @@ D、 1, 4, 3, 2
 
 ## 87、构建一个神经网络，将前一层的输出和它自身作为输入。
 
-![](https://img.hacpai.com/e/1f917097e8a74057b79fe09a648914b3.jpeg)
+![](img/1f917097e8a74057b79fe09a648914b3.jpeg)
 
 下列哪一种架构有反馈连接？
 
@@ -2096,7 +2096,7 @@ A是对的，其它选项不确定
 
 ## 90、在训练神经网络时，损失函数(loss)在最初的几个epochs时没有下降，可能的原因是？
 
-![](https://img.hacpai.com/e/f52abe1fd5184e2f9aa09c9f095ebf61.jpeg)
+![](img/f52abe1fd5184e2f9aa09c9f095ebf61.jpeg)
 
 A、学习率(learning rate)太低
 
